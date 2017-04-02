@@ -3,7 +3,10 @@ package uncc.ryan.clteatsdemo;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.icu.util.ULocale;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,29 +17,42 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+
+
+import java.util.ArrayList;
 
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
 
-public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, GoogleMap.OnMyLocationButtonClickListener {
+public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleMap mMap;
+    public static GoogleMap mMap;
     protected LocationManager locationManager;
-    protected LocationListener locationListener;
     protected double latitude, longitude;
+    ArrayList<Address> addressList;
+    ArrayList<Restaurant> placesList;
+
     GoogleApiClient mGoogleApiClient;
 
-    boolean awal = true;
+    Spinner spinDistance;
+    ArrayList<String> spinDistanceOptions = new ArrayList<String>();
 
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    GetCurrentLocationTask locationListener = new GetCurrentLocationTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,72 +63,94 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                 .findFragmentById(googleMap);
         mapFragment.getMapAsync(this);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, true);
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        //setOnClickListeners
+        findViewById(R.id.btn2Search).setOnClickListener(this);
+        //initalize spinners
+            spinDistanceOptions.add("5");
+            spinDistanceOptions.add("10");
+            spinDistanceOptions.add("20");
+            spinDistanceOptions.add("30");
+        ArrayAdapter<String> spinDistanceAdapter = new ArrayAdapter<String>(
+            this, android.R.layout.simple_spinner_item, spinDistanceOptions);
+        spinDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinDistance = (Spinner)findViewById(R.id.spinDistance);
+        spinDistance.setAdapter(spinDistanceAdapter);
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        if(location != null){
-            onLocationChanged(location);
-        }
-        //locationManager.requestLocationUpdates(bestProvider, 20000, 0, this.locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 1, locationListener);
+        latitude = locationListener.getThisLatitude();
+        longitude = locationListener.getThisLongitude();
+        Log.d("Set current coordinates",latitude + ", " + longitude);
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v == findViewById(R.id.btn2Search)){
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+            //TODO: load search parameters into search asynctask, launch searchResultsActivity
+            onSearch();
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        //mMap.setOnMyLocationButtonClickListener();
-        enableMyLocation();
-
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            if(awal){
-                awal = false;
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+    public void onSearch(){
+        //TO DO: populate spinners
+        String maxDistance = spinDistance.getSelectedItem().toString();
+            String radius = null;
+            if(maxDistance.equals(5)) {
+                radius = "8047";
+            }else if(maxDistance.equals(10)){
+                radius = "16093";
+            }else if(maxDistance.equals(20)){
+                radius = "32187";
+            }else if(maxDistance.equals(30)){
+                radius = "48280";
             }
-        }
-    };
+        Spinner spinCategory = (Spinner)findViewById(R.id.spinCategory);
+            //String foodCategory = spinCategory.getSelectedItem().toString();
+        Spinner spinPrice = (Spinner)findViewById(R.id.spinPrice);
+            //String maxPrice = spinPrice.getSelectedItem().toString();
 
-    public void onLocationChanged(Location location){
-        latitude = location.getLatitude(); longitude = location.getLongitude();
+        //TODO: clear example values
+        latitude = 35.32; longitude = -80.78;
+        radius = "48280";
+
+        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        sb.append("location=" + latitude + "," + longitude);
+        sb.append("&radius=" + radius);
+        sb.append("&types=restaurant");
+        sb.append("&sensor=true");
+        sb.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
+
+        Log.d("Built Search Query: ",sb.toString());
+
+        PlacesAPIAsyncTask placesTask = new PlacesAPIAsyncTask();
+        placesTask.execute(sb.toString());
+        addToPlacesList(sb.toString());
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    public void addToPlacesList(String sb){
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
     }
 
     @Override
@@ -121,19 +159,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     @Override
-    public boolean onMyLocationButtonClick() {
-        return false;
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    private void enableMyLocation(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission to access the location is missing.
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        } else if (mMap != null) {
-            // Access to the location has been granted to the app.
-            mMap.setMyLocationEnabled(true);
-        }
     }
 }
