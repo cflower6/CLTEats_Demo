@@ -16,6 +16,7 @@
             android:layout_height="265dp" />
 
         <LinearLayout
+            android:id="@+id/llSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/googleMap"
@@ -23,14 +24,16 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/llDistanceParameter"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/tvDistance"
                     android:layout_width="160dp"
                     android:layout_height="match_parent"
+                    android:gravity="left"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:text="@string/spinnername_distance"
@@ -38,22 +41,25 @@
                     android:textSize="24sp" />
 
                 <Spinner
-                    android:id="@+id/spinner2"
+                    android:id="@+id/spinDistance"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:gravity="right" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llCategoryParameter"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/tvCategory"
                     android:layout_width="140dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.97"
+                    android:gravity="left"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:text="@string/spinnername_category"
@@ -61,21 +67,24 @@
                     android:textSize="24sp" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/spinCategory"
                     android:layout_width="194dp"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:gravity="right" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llPriceCategory"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tvPrice"
                     android:layout_width="160dp"
                     android:layout_height="match_parent"
+                    android:gravity="left"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:text="@string/spinnername_price"
@@ -83,9 +92,10 @@
                     android:textSize="24sp" />
 
                 <Spinner
-                    android:id="@+id/spinner3"
+                    android:id="@+id/spinPrice"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:gravity="right" />
             </LinearLayout>
 
             <Button
@@ -95,7 +105,9 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
                 android:text="@string/btn2_search"
+                android:textAlignment="center"
                 android:textSize="24sp" />
 
         </LinearLayout>

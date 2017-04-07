@@ -13,6 +13,12 @@
     <string name="spinnername_category">Type of Food</string>
     <string name="spinnername_price">Price</string>
     <string name="btn2_search">Search</string>
+    <!--restaurant_result_object-->
+    <string name="name">Restaurant Name</string>
+    <string name="address">xxxx Street Name</string>
+    <string name="distance_number">00</string>
+    <string name="distance_footer"> miles away</string>
+    <string name="Rating">5.0</string>
     <!--DemoResource-->
     <string name="label_btn_find">Find</string>
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>

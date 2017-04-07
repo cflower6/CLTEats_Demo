@@ -49,7 +49,8 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search" />
-        <activity android:name=".GooglePlacesActivity"></activity>
+        <activity android:name=".GooglePlacesActivity" />
+        <activity android:name=".SearchResultsActivity"></activity>
     </application>
 
 </manifest>
