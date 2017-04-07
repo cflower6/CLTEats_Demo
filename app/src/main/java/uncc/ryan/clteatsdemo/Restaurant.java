@@ -1,17 +1,13 @@
 package uncc.ryan.clteatsdemo;
 
-<<<<<<< HEAD
 import android.os.Parcel;
 import android.os.Parcelable;
 
-=======
->>>>>>> origin/master
 /**
  * Created by Ryrid on 3/31/2017.
  */
 
-<<<<<<< HEAD
-public class Restaurant implements Parcelable {
+public class Restaurant {
     String name, food_category, address, place_id;
     double coord_lat, coord_long, distance_meters, distance_miles, price, rating;
 
@@ -29,11 +25,6 @@ public class Restaurant implements Parcelable {
         rating = in.readDouble();
     }
 
-=======
-public class Restaurant {
-    String name, food_category, address;
-    double coord_lat, coord_long, distance_meters, distance_miles, price;
->>>>>>> origin/master
 
     @Override
     public String toString() {
@@ -43,7 +34,6 @@ public class Restaurant {
                 ", address='" + address + '\'' +
                 ", coord_lat=" + coord_lat +
                 ", coord_long=" + coord_long +
-<<<<<<< HEAD
                 //", distance_meters=" + distance_meters +
                 //", distance_miles=" + distance_miles +
                 //", price=" + price +
@@ -67,14 +57,6 @@ public class Restaurant {
         this.rating = rating;
     }
 
-=======
-                ", distance_meters=" + distance_meters +
-                ", distance_miles=" + distance_miles +
-                ", price=" + price +
-                '}';
-    }
-
->>>>>>> origin/master
     public String getName() {
         return name;
     }
@@ -138,32 +120,5 @@ public class Restaurant {
     public void setPrice(double price) {
         this.price = price;
     }
-<<<<<<< HEAD
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(address);
-        dest.writeString(place_id);
-        dest.writeDouble(coord_lat);
-        dest.writeDouble(coord_long);
-        dest.writeDouble(distance_miles);
-        dest.writeDouble(rating);
-    }
-
-    public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>(){
-        public Restaurant createFromParcel(Parcel in){
-            return new Restaurant(in);
-        }
-        public Restaurant[] newArray(int size){
-            return new Restaurant[size];
-        }
-    };
-=======
->>>>>>> origin/master
+    
 }
