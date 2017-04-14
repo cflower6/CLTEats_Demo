@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/restaurantObjLayout"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -25,7 +25,7 @@
 
             <TextView
                 android:id="@+id/rllAddress"
-                android:layout_width="225dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.87"
                 android:text="@string/address"
@@ -42,7 +42,7 @@
 
             <ImageView
                 android:id="@+id/rllStar"
-                android:layout_width="35dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@android:drawable/btn_star_big_on" />
 
@@ -70,7 +70,18 @@
                 android:layout_weight="0.38"
                 android:text="@string/distance_footer"
                 android:textSize="18sp" />
+
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.10"
+            android:paddingTop="0dp"
+            app:srcCompat="@color/colorPrimary" />
+
     </LinearLayout>
+
 </LinearLayout>

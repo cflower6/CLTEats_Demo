@@ -30,8 +30,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
         public void bindRestaurant(Restaurant restaurant){
             restName.setText(restaurant.getName());
             restAddress.setText(restaurant.getAddress());
-            //restDistance.setText((int) restaurant.getDistance_miles());
-            //restRating.setText((int) restaurant.getRating());
+            Double mDist = restaurant.getDistance_miles();
+            mDist = round(mDist,2);
+            restDistance.setText(mDist.toString());
+            Double mRating = restaurant.getRating();
+            restRating.setText(mRating.toString());
         }
 
         public void onClick(View v){
@@ -64,5 +67,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
         }else{
             return 0;
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

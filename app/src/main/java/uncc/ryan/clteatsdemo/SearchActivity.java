@@ -29,6 +29,8 @@ import android.widget.Spinner;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -121,9 +123,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     public void onLocationChanged(Location location){
-        //moveMapCamera();
         locationManager.removeUpdates(this.locationListener);
-        //moveMapCamera();
     }
 
     @Override
@@ -199,6 +199,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     public PlacesAPIAsyncTask.AsyncResponse processFinish(ArrayList<Restaurant> output) {
         placesList = output;
         Log.d("debug","placesList: " + placesList.toString());
+
+        Location globalLocation = new Location("global");
+        globalLocation.setLatitude(latitude);
+        globalLocation.setLongitude(longitude);
+
+        for(int j = 0; j < placesList.size(); j++){
+            Location newLocation = new Location("newLocation");
+            newLocation.setLatitude(placesList.get(j).getCoord_lat());
+            newLocation.setLongitude(placesList.get(j).getCoord_long());
+
+            double distance = newLocation.distanceTo(globalLocation);
+            placesList.get(j).setDistance_meters(distance);
+            placesList.get(j).setDistance_miles(distance*0.000621371);
+        }
+
         clearLayout();
         return null;
     }
@@ -218,6 +233,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(placesList.get(k).getCoord_lat(), placesList.get(k).getCoord_long()))
                     .title(placesList.get(k).getName()));
+
+            buildOnLongClickListeners();
         }
 
         moveMapCamera();
@@ -233,5 +250,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
         }
+    }
+
+    public void buildOnLongClickListeners(){
+        //
     }
 }
