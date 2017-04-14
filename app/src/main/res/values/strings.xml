@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CLT Eats Demo</string>
+    <string name="app_name">CLT Eats</string>
     <string name="action_settings">About</string>
     <!--DemoResource-->
     <string name="app_name_alt">CLT Eats</string>
