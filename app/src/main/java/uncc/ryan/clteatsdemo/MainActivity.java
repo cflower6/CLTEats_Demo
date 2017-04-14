@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }else{
                 Toast.makeText(this, "ERROR: No Internet Connection!", Toast.LENGTH_SHORT).show();
             }
+        }else if(v == findViewById(R.id.btnSettings)) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
     }
 

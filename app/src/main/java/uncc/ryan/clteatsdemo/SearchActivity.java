@@ -50,7 +50,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     public static GoogleMap mMap;
     protected LocationManager locationManager;
-    protected double latitude = 35.32, longitude = -80.78;
+    protected double latitude, longitude;
     ArrayList<Address> addressList;
     static ArrayList<Restaurant> placesList;
 
@@ -167,6 +167,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         Spinner spinPrice = (Spinner)findViewById(R.id.spinPrice);
             //String maxPrice = spinPrice.getSelectedItem().toString();
 
+        longitude = locationListener.thisLongitude;
+        latitude = locationListener.thisLatitude;
 
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/xml?");
         sb.append("location=" + latitude + "," + longitude);
