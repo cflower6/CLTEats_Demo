@@ -3,6 +3,7 @@ package uncc.ryan.clteatsdemo;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.icu.util.ULocale;
 import android.location.Address;
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +27,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,7 +46,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.logging.Handler;
 
+import static java.lang.Math.abs;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
 
 
@@ -57,11 +64,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     boolean awal = true;
 
+    static float zoomLevel = 9.0f;
+
     GoogleApiClient mGoogleApiClient;
 
     Spinner spinDistance;
     Spinner spinCategory;
     Spinner spinPrice;
+
+    TextView tvLat;
+    TextView tvLong;
+
+    boolean onSearchRandomized = false;
+
+    SharedPreferences sp;
+    String sortType;
 
     GetCurrentLocationTask locationListener = new GetCurrentLocationTask();
 
@@ -73,6 +90,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(googleMap);
         mapFragment.getMapAsync(this);
+
+        sp = this.getSharedPreferences("MyPref",Context.MODE_PRIVATE);
+        sortType = sp.getString("SORT_TYPE","Distance");//default sort type = distance
+        Log.d("sp.SORT_TYPE",sortType+"");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -95,6 +116,12 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
         //setOnClickListeners
         findViewById(R.id.btn2Search).setOnClickListener(this);
+        findViewById(R.id.btnSearchRandomize).setOnClickListener(this);
+        findViewById(R.id.btnRetryGPS).setOnClickListener(this);
+
+        tvLat = (TextView)findViewById(R.id.tvLatitude);
+        tvLong = (TextView)findViewById(R.id.tvLongitude);
+
         //initalize spinners
             ArrayAdapter spinDistanceAdapter = ArrayAdapter.createFromResource(this,R.array.distance_array,R.layout.spinner_item_custom);
             spinDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -119,13 +146,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 1, locationListener);
-        if(locationListener.getThisLatitude() != 0.0) {
-            latitude = locationListener.getThisLatitude();
-        }
-        if(locationListener.getThisLongitude() != 0.0) {
-            longitude = locationListener.getThisLongitude();
-        }
-        Log.d("Set current coordinates",latitude + ", " + longitude);
+
     }
 
     @Override
@@ -136,24 +157,37 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     public void onClick(View v) {
         if(v == findViewById(R.id.btn2Search)){
-
-            //TODO: load search parameters into search asynctask, launch searchResultsActivity
             onSearch();
+        }else if(v == findViewById(R.id.btnSearchRandomize)){
+            onSearchRandomized = true;
+            onSearch();
+        }else if(v == findViewById(R.id.btnRetryGPS)){
+            getGPS();
         }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         enableMyLocation();
+
+        LatLng latLngDefault = new LatLng(35.3056877,-80.7322255);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngDefault,9.0f));
+
+        if(latitude != 0.0 && longitude != 0.0) {
+            LatLng latlng = new LatLng(latitude, longitude);
+            //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latlng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,8.0f));
+        }
     }
 
     public void moveMapCamera(){
         LatLng latlng = new LatLng(latitude,longitude);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latlng);
-        mMap.animateCamera(cameraUpdate);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latlng);
+        //mMap.animateCamera(cameraUpdate,1000,null);
+        if(latitude != 0.0 && longitude != 0.0){
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,zoomLevel));
+        }
     }
 
     public void onSearch(){
@@ -162,20 +196,25 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             String radius = null;
             if(maxDistance.equals("5")) {
                 radius = "8047";
+                zoomLevel = 11.5f;
             }else if(maxDistance.equals("10")){
                 radius = "16093";
+                zoomLevel = 10.0f;
             }else if(maxDistance.equals("20")){
                 radius = "32187";
+                zoomLevel = 9.5f;
             }else if(maxDistance.equals("30")){
                 radius = "48280";
+                zoomLevel = 9.3f;
             }
 
             //String foodCategory = spinCategory.getSelectedItem().toString();
 
             //String maxPrice = spinPrice.getSelectedItem().toString();
 
-        longitude = locationListener.thisLongitude;
-        latitude = locationListener.thisLatitude;
+        getGPS();
+
+        Log.d("Set current coordinates",latitude + ", " + longitude);
 
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/xml?");
         sb.append("location=" + latitude + "," + longitude);
@@ -187,7 +226,31 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         Log.d("Built Search Query: ",sb.toString());
 
         new PlacesAPIAsyncTask(this).execute(sb.toString());
+    }
 
+    public void getGPS(){ //has error correcting loops to retry get coordinates up to 5 times arbitrarily
+        longitude = locationListener.thisLongitude;
+        tvLong.setText(String.valueOf(longitude));
+        if(longitude == 0.0 || latitude == 0.0){
+            for(int a = 0;a < 6;a++) {
+                if(longitude == 0.0) {
+                    longitude = locationListener.thisLongitude;
+                    Log.d("LOCATION PROBLEM", "TRIED REFETCH LONGITUDE");
+                }
+                if(latitude == 0.0){
+                    latitude = locationListener.thisLatitude;
+                    tvLat.setText(String.valueOf(latitude));
+                    Log.d("LOCATION PROBLEM","TRIED REFETCH LATITUDE");
+                }
+                if(a == 5) {
+                    if(latitude == 0.0 || longitude == 0.0) {
+                        Toast.makeText(this, "GPS ERROR!", Toast.LENGTH_SHORT).show();
+                    }
+                }else if(longitude != 0.0 && latitude != 0.0){
+                    moveMapCamera();
+                }
+            }
+        }
     }
 
     @Override
@@ -223,6 +286,24 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             placesList.get(j).setDistance_miles(distance*0.000621371);
         }
 
+        //randomized selection function
+        if(onSearchRandomized && placesList.size() > 0) {
+            Random random = new Random();
+            int upperBound = placesList.size();
+            int randomSelection = abs((random.nextInt(upperBound) + 1));
+
+            Log.d("randomSelection",randomSelection+"");
+            Log.d("upperBound",upperBound+"");
+
+            placesList.add(0,placesList.get(randomSelection));
+
+            while(placesList.size() >= 2){
+                Log.d("placesList removed",placesList.get(1).toString()+"");
+                placesList.remove(placesList.get(1));
+            }
+            Log.d("placesList",placesList.size()+"");
+        }
+
         clearLayout();
         return null;
     }
@@ -232,6 +313,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         linearLayout.removeAllViews();
         RecyclerView resultsView = new RecyclerView(this);
         resultsView.setHasFixedSize(true);
+        resultsView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, resultsView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d("onItemClick","position " + position);
+                        //Fragment fragment = ItemShortTouchFragment.newInstance():
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        Log.d("onLongItemClick","position " + position);
+
+                    }
+                })
+        );
         linearLayout.addView(resultsView);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         resultsView.setLayoutManager(llm);
@@ -242,8 +338,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(placesList.get(k).getCoord_lat(), placesList.get(k).getCoord_long()))
                     .title(placesList.get(k).getName()));
-
-            buildOnLongClickListeners();
         }
 
         moveMapCamera();
@@ -259,9 +353,5 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
         }
-    }
-
-    public void buildOnLongClickListeners(){
-        //
     }
 }

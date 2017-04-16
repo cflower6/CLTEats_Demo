@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnSearch).setOnClickListener(this);
         findViewById(R.id.btnFavorites).setOnClickListener(this);
         findViewById(R.id.btnSettings).setOnClickListener(this);
+        findViewById(R.id.btnAbout).setOnClickListener(this);
     }
 
     @Override
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }else if(v == findViewById(R.id.btnSettings)) {
             Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }else if(v == findViewById(R.id.btnAbout)){
+            Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
         }
     }

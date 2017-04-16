@@ -1,6 +1,7 @@
 package uncc.ryan.clteatsdemo;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHolder> {
-    public static class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         TextView restName;
         TextView restAddress;
         TextView restDistance;
@@ -38,7 +39,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
         }
 
         public void onClick(View v){
+            //Log.d("Object onClick",getPosition()+"");
+        }
 
+        @Override
+        public boolean onLongClick(View v) {
+            return false;
         }
     }
 

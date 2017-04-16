@@ -17,22 +17,11 @@ RE-Results list item onLongClickListener contents:
 		-launch navigation
 		-add to favorites
 		-view location reviews
-RE-Cuisine Categories:
-	-Any
-	-American
-	-Barbecue
-	-Chinese
-	-French
-	-Hamburger
-	-Indian
+
 
 RE-Setting: show is open only
 RE-Setting:i'm feeling lucky button
         -toggle full random vs categorical
-	-Japanese
-	-Mexican
-	-Pizza
-	-Seafood
-	-Steak
-	-Sushi
-	-Thai
+
+BEHAVIOR NOTE: sometimes no results are received from the server
+	-research adding a request retry in the code

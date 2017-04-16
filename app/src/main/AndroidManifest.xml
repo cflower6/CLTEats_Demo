@@ -50,7 +50,8 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search" />
         <activity android:name=".GooglePlacesActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>
