@@ -7,7 +7,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="#034125"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <fragment
             android:id="@+id/googleMap"
@@ -38,13 +41,29 @@
                     android:paddingTop="10dp"
                     android:text="@string/spinnername_distance"
                     android:textAlignment="textEnd"
+                    android:textColor="@android:color/background_light"
                     android:textSize="24sp" />
 
-                <Spinner
-                    android:id="@+id/spinDistance"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="right" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#C1AF6C"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinDistance"
+                        android:layout_width="180dp"
+                        android:layout_height="35dp"
+                        android:background="#034125"
+                        android:gravity="center"
+                        android:longClickable="false"
+                        android:textColor="@android:color/background_light" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -56,21 +75,34 @@
 
                 <TextView
                     android:id="@+id/tvCategory"
-                    android:layout_width="140dp"
+                    android:layout_width="160dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.97"
                     android:gravity="left"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:text="@string/spinnername_category"
                     android:textAlignment="textEnd"
+                    android:textColor="@android:color/background_light"
                     android:textSize="24sp" />
 
-                <Spinner
-                    android:id="@+id/spinCategory"
-                    android:layout_width="194dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="right" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#C1AF6C"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinCategory"
+                        android:layout_width="180dp"
+                        android:layout_height="35dp"
+                        android:background="#034125"
+                        android:gravity="center"
+                        android:textColor="@android:color/background_light" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -89,26 +121,56 @@
                     android:paddingTop="10dp"
                     android:text="@string/spinnername_price"
                     android:textAlignment="textEnd"
+                    android:textColor="@android:color/background_light"
                     android:textSize="24sp" />
 
-                <Spinner
-                    android:id="@+id/spinPrice"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="right" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#C1AF6C"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinPrice"
+                        android:layout_width="180dp"
+                        android:layout_height="35dp"
+                        android:background="#034125"
+                        android:gravity="right"
+                        android:textColor="@android:color/background_light" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn2Search"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:text="@string/btn2_search"
-                android:textAlignment="center"
-                android:textSize="24sp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="60dp"
+                    android:background="#756733"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn2Search"
+                        android:layout_width="290dp"
+                        android:layout_height="50dp"
+                        android:background="#C1AF6C"
+                        android:gravity="center"
+                        android:text="@string/btn2_search"
+                        android:textAlignment="center"
+                        android:textSize="24sp" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

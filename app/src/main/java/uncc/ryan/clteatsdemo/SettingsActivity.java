@@ -19,12 +19,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         //initialize spinner
-        spinSortByType.add("Name");
-        spinSortByType.add("Rating");
-        spinSortByType.add("Distance");
-        spinSortByType.add("Price");
-        ArrayAdapter<String> spinSortByTypeAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, spinSortByType);
+        ArrayAdapter spinSortByTypeAdapter = ArrayAdapter.createFromResource(this,R.array.sortBy_array,R.layout.spinner_item_custom);
         spinSortByTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortByType = (Spinner)findViewById(R.id.spSortByPref);
         sortByType.setAdapter(spinSortByTypeAdapter);

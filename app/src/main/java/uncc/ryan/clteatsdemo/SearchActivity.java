@@ -41,10 +41,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
-
 import java.util.ArrayList;
 
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
+
 
 public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener, PlacesAPIAsyncTask.AsyncResponse {
 
@@ -60,7 +60,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     GoogleApiClient mGoogleApiClient;
 
     Spinner spinDistance;
-    ArrayList<String> spinDistanceOptions = new ArrayList<String>();
+    Spinner spinCategory;
+    Spinner spinPrice;
 
     GetCurrentLocationTask locationListener = new GetCurrentLocationTask();
 
@@ -95,15 +96,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         //setOnClickListeners
         findViewById(R.id.btn2Search).setOnClickListener(this);
         //initalize spinners
-            spinDistanceOptions.add("5");
-            spinDistanceOptions.add("10");
-            spinDistanceOptions.add("20");
-            spinDistanceOptions.add("30");
-        ArrayAdapter<String> spinDistanceAdapter = new ArrayAdapter<String>(
-            this, android.R.layout.simple_spinner_item, spinDistanceOptions);
-        spinDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinDistance = (Spinner)findViewById(R.id.spinDistance);
-        spinDistance.setAdapter(spinDistanceAdapter);
+            ArrayAdapter spinDistanceAdapter = ArrayAdapter.createFromResource(this,R.array.distance_array,R.layout.spinner_item_custom);
+            spinDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinDistance = (Spinner)findViewById(R.id.spinDistance);
+            spinDistance.setAdapter(spinDistanceAdapter);
+
+            ArrayAdapter spinCategoryAdapter = ArrayAdapter.createFromResource(this,R.array.cuisine_array,R.layout.spinner_item_custom);
+            spinCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinCategory = (Spinner)findViewById(R.id.spinCategory);
+            spinCategory.setAdapter(spinCategoryAdapter);
+
+            ArrayAdapter spinPriceAdapter = ArrayAdapter.createFromResource(this,R.array.price_array,R.layout.spinner_item_custom);
+            spinPriceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinPrice = (Spinner)findViewById(R.id.spinPrice);
+            spinPrice.setAdapter(spinPriceAdapter);
+
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -162,9 +169,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             }else if(maxDistance.equals("30")){
                 radius = "48280";
             }
-        Spinner spinCategory = (Spinner)findViewById(R.id.spinCategory);
+
             //String foodCategory = spinCategory.getSelectedItem().toString();
-        Spinner spinPrice = (Spinner)findViewById(R.id.spinPrice);
+
             //String maxPrice = spinPrice.getSelectedItem().toString();
 
         longitude = locationListener.thisLongitude;
