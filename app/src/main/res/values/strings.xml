@@ -68,7 +68,18 @@
     <string name="switch_RandomType">Randomize by constraints:</string>
     <string name="btn_Save">Save</string>
     <string name="app_Build_Header">Application Build</string>
-    <string name="app_BuildVersion">v0.6.5</string>
+    <string name="app_BuildVersion">v0.6.6</string>
+    <string name="app_BuildDate">04/16/2017</string>
     <!--AboutActivity-->
     <string name="about_Header">About</string>
+    <string name="about_App">The new best app for restaurant discovery!</string>
+    <string name="about_UserNotes">User Notes</string>
+    <string name="about_Distance">- Distance is currently straight-line only</string>
+    <string name="about_GPS">- If GPS is buggy hit the black X to refresh it</string>
+    <string name="about_Resources">Powered By</string>
+    <string name="about_GoogleMapsAPI">Google Maps API</string>
+    <string name="about_BuildTeam">Build Team</string>
+    <string name="about_Team">Group 10</string>
+    <!--PopupWindowResources-->
+    <string name="pop_Details_Header">Details</string>
 </resources>

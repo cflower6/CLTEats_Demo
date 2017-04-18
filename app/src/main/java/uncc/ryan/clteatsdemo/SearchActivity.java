@@ -18,11 +18,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -51,6 +54,8 @@ import java.util.logging.Handler;
 
 import static java.lang.Math.abs;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
+import static uncc.ryan.clteatsdemo.R.id.start;
+import static uncc.ryan.clteatsdemo.R.styleable.MenuItem;
 
 
 public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener, PlacesAPIAsyncTask.AsyncResponse {
@@ -208,9 +213,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                 zoomLevel = 9.3f;
             }
 
-            //String foodCategory = spinCategory.getSelectedItem().toString();
+        String foodCategory = spinCategory.getSelectedItem().toString();
 
-            //String maxPrice = spinPrice.getSelectedItem().toString();
+        String maxPrice = spinPrice.getSelectedItem().toString();
 
         getGPS();
 
@@ -311,20 +316,31 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     public void clearLayout() {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llSearch);
         linearLayout.removeAllViews();
-        RecyclerView resultsView = new RecyclerView(this);
+        final RecyclerView resultsView = new RecyclerView(this);
         resultsView.setHasFixedSize(true);
         resultsView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, resultsView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Log.d("onItemClick","position " + position);
-                        //Fragment fragment = ItemShortTouchFragment.newInstance():
+                        Toast.makeText(SearchActivity.this, "" + placesList.get(position).getName(), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(SearchActivity.this,PopupWindow.class));
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
                         Log.d("onLongItemClick","position " + position);
+                        PopupMenu longClickMenu = new PopupMenu(SearchActivity.this, resultsView);
+                        longClickMenu.getMenuInflater().inflate(R.menu.popup_menu_longclick, longClickMenu.getMenu());
 
+                        longClickMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(android.view.MenuItem item) {
+                                Toast.makeText(SearchActivity.this, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+                        longClickMenu.show();
                     }
                 })
         );
@@ -337,7 +353,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         for (int k = 0; k < placesList.size(); k++){
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(placesList.get(k).getCoord_lat(), placesList.get(k).getCoord_long()))
-                    .title(placesList.get(k).getName()));
+                    .title(placesList.get(k).getName()))
+                    .setSnippet(k + "");
         }
 
         moveMapCamera();

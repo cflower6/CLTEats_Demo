@@ -32,6 +32,7 @@
             android:text="@string/set_Prefs_Header"
             android:textAllCaps="true"
             android:textColor="@android:color/background_light"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -115,28 +116,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:text="@string/app_Build_Header"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@android:color/background_light"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/app_BuildVersion"
-                android:textColor="@android:color/background_light"
-                android:textSize="12sp" />
 
         </LinearLayout>
 

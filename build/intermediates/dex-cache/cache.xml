@@ -3,192 +3,192 @@
 
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="95519720620b553f63afc789beba9ad582807f7c">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-25.3.1_73e42f44e606ed2e7ec6912b828a4457255111b3.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\10.2.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="c7626a9aa507bbbdc16188bc9a9f9bf3370c1ddd">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-10.2.1_a2f43ed00ff534333f87f5fb1977d2675f256fa2.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\10.2.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="bdcc2a9572f18b8c90a3a157cab6cdfc97c6c736">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-10.2.1_9d740f2b6e059a26f9adcbb097224ead20ceab76.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\10.2.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\10.2.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="6003d64df88a6ce5e961fa2bad7f1b9b97689ac1">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-10.2.1_972213bc3f90beb777b142fe7b0b459d187c2aee.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-10.2.1_6eb3fd6af228a79fa32f23efa04e25dcde888312.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-25.3.1_866bddfb72c43392fa571e52e20f9f01da1b07d7.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\10.2.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="bb115a110992b254f767f337da233071f6f940b8">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-location-10.2.1_566dd02ce36a2ccd49ceef481c6759d2900d21e8.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-utils-25.3.1_672df141f2bd24e114798470b347d9c2e60de338.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-25.3.1_1933d43b84d0f4c43938aaed80c2e6dcb7bbeed5.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.3.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.3.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-25.3.1_48b3e7370c7074d159dd1862bc30d3327365da6f.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-25.3.1_f523416315b365afcf24cbbb9fd93d8d06059f51.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.3.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.3.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
-        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-25.3.1_46fd23364627fc998e9de9879fb10b897273848a.jar" />
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-25.3.1_4f02b5de204c316b602c4adef97d7f4ff3d964e1.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\10.2.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\10.2.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="19696dc358ac668e341f28c41e3387d61ccdb81d">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-10.2.1_1e903423d3227f3cb8fc1cc037ae0dc1c2fbf717.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-10.2.1_7dc9b870664fd06b307182684278167e0b01eb4d.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-compat-25.3.1_c74e7c8e237096bbda525bf6e738d78c8f66d32a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-25.3.1_d117ee55fab0c9fdee1d1d4b4d149e05281d7bdb.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.3.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.3.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-25.3.1_0aff560b2f1c6c3d79b4eaee5d4a9f9a01356ef5.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-25.3.1_bc8517a5d5411f6b80232605747c3439f673aec1.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.2_c87bd87e7c40affb19f42b75d1d9587a033b3d80.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\support-annotations-25.3.1_5f82b56fde09a608b9b2d521d8a402fd3585c05f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.3.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-25.3.1_9cff8d75dfd3534783cfb2981aa3adddee14af7e.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\design\25.3.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\design\25.3.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="38789e20ace9ab7dbd00554bd2673ab424478d3b">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-design-25.3.1_c57112d6984f501a21d3ecff15fea831a02632cc.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-design-25.3.1_cef0635aeff4f7bd69b3bab22e6222e353175034.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support.constraint\constraint-layout\1.0.2\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.3.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support.constraint-constraint-layout-1.0.2_d618e13d90969c1393db7b80183697ae8cc8eded.jar" />
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-25.3.1_7eb84c64aba5ab6eb0e9704d5b8e78db5655f3e8.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\transition\25.3.1\jars\classes.jar"
+        jar="D:\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.2_dbc698cfea7c077128653c7c426570192cef33a6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\support-annotations-25.3.1_711b4934b449cfe6e70f4fdfc28a1a1baf8f0b34.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.3.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-25.3.1_c83c08437c1a015c49113cbb3f83285eb8e961cb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.3.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-utils-25.3.1_eec7b31d3192363747196bcc5da667993c7d57c7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\10.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="bb115a110992b254f767f337da233071f6f940b8">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-location-10.2.1_1b7254c3801b9f68761e909f87ae810cc8bad7d7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.3.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-compat-25.3.1_372daeaf8d09381c730d63b949382ee0af0e0913.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\10.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="bdcc2a9572f18b8c90a3a157cab6cdfc97c6c736">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-10.2.1_843c30f59900bdf13d48e7b507a16a1ac107194e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\transition\25.3.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="d4cf6227dd6a2ceff0f7dcf0c324380b7abf2c28">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-transition-25.3.1_a873030eb6ecc8e6b40fee0857c76be074982437.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-transition-25.3.1_34c97169bb60363b9636c628c3b4353448901367.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-places\10.2.1\jars\classes.jar"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-places\10.2.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="e4851331b3944beb6e7f77316a7661f53781da62">
-        <dex dex="C:\Users\Ryan\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-places-10.2.1_b9cb5b7a2d76c58427d020575e7b55b0367376e9.jar" />
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-places-10.2.1_c072148e5073c452200c7601745f7f5bab871969.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.3.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-25.3.1_bde15e9a6c470cf10d121256450073da496185f1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support.constraint\constraint-layout\1.0.2\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support.constraint-constraint-layout-1.0.2_639bd973ed2ec1923080815017a3f49ad39713db.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.3.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-25.3.1_c2dce1e47e4db31e8c00d670847b3704e7dec136.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.3.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-25.3.1_d9709055d09cef27ffe06f00f07f2b68d1e2235e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\10.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c7626a9aa507bbbdc16188bc9a9f9bf3370c1ddd">
+        <dex dex="C:\Users\Ryrid\AndroidStudioProjects\CLTEatsDemo\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-10.2.1_4357fe1f1d586ba318830a3b1f7fdb189e611c51.jar" />
     </item>
 
 </items>
