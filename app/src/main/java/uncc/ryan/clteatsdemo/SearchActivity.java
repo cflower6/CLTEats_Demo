@@ -35,6 +35,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
@@ -49,10 +52,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.logging.Handler;
 
 import static java.lang.Math.abs;
+import static uncc.ryan.clteatsdemo.R.id.dark;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
 import static uncc.ryan.clteatsdemo.R.id.start;
 import static uncc.ryan.clteatsdemo.R.styleable.MenuItem;
@@ -81,9 +87,16 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     TextView tvLong;
 
     boolean onSearchRandomized = false;
+    boolean onSearchRandomizedBranch = false;
+
+    int randomizedListSize;
 
     SharedPreferences sp;
     String sortType;
+    String randomType;
+    String filterConst;
+
+    String tempPrice;
 
     GetCurrentLocationTask locationListener = new GetCurrentLocationTask();
 
@@ -98,7 +111,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
         sp = this.getSharedPreferences("MyPref",Context.MODE_PRIVATE);
         sortType = sp.getString("SORT_TYPE","Distance");//default sort type = distance
+        randomType = sp.getString("RANDOM_TYPE","TRUE");//default randomize = use constraints
+        filterConst = sp.getString("FILTER_CONST","TRUE");//default filter = remove places without constraint data
         Log.d("sp.SORT_TYPE",sortType+"");
+        Log.d("sp.RANDOM_TYPE",randomType+"");
+        Log.d("sp.FILTER_CONST",filterConst+"");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -164,7 +181,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         if(v == findViewById(R.id.btn2Search)){
             onSearch();
         }else if(v == findViewById(R.id.btnSearchRandomize)){
-            onSearchRandomized = true;
+            onSearchRandomized = true; onSearchRandomizedBranch = true;
             onSearch();
         }else if(v == findViewById(R.id.btnRetryGPS)){
             getGPS();
@@ -277,6 +294,19 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         placesList = output;
         Log.d("debug","placesList: " + placesList.toString());
 
+        Log.d("1st randomizedListSize",randomizedListSize+"");
+        if(onSearchRandomizedBranch){
+            randomizedListSize = 1;
+            onSearchRandomizedBranch = false;
+            Log.d("placesList Bound Mode","Randomized");
+        }else{
+            randomizedListSize = placesList.size();
+            Log.d("placesList Bound Mode","Standard");
+        }
+
+        Log.d("getPlaceDetails","method called");
+        getPlaceDetails();
+
         Location globalLocation = new Location("global");
         globalLocation.setLatitude(latitude);
         globalLocation.setLongitude(longitude);
@@ -291,10 +321,13 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             placesList.get(j).setDistance_miles(distance*0.000621371);
         }
 
+        Log.d("onSortingList()","method called");
+        onSortingList();
+
         //randomized selection function
         if(onSearchRandomized && placesList.size() > 0) {
             Random random = new Random();
-            int upperBound = placesList.size();
+            int upperBound = (placesList.size() - 1);
             int randomSelection = abs((random.nextInt(upperBound) + 1));
 
             Log.d("randomSelection",randomSelection+"");
@@ -313,6 +346,49 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         return null;
     }
 
+    public void getPlaceDetails(){
+        Log.d("2nd randomizedListSize",randomizedListSize+"");
+        for(int i = 0;i<randomizedListSize;i++){
+            Log.d("Place name",placesList.get(i).getName()+"");
+            Log.d("Place id",placesList.get(i).getPlace_id()+"");
+            final int finalI = i;
+            Places.GeoDataApi.getPlaceById(mGoogleApiClient,
+                        placesList.get(i).getPlace_id())
+                        .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                            @Override
+                            public void onResult(@NonNull PlaceBuffer places) {
+                                if(places.getStatus().isSuccess() && places.getCount() > 0){
+                                    final Place myPlace = places.get(0);
+                                    Log.i("Info","Place found: " + myPlace.getName());
+                                    Log.i("Info","Place found price: " + myPlace.getPriceLevel()+"");
+
+                                    Log.d("finalI",finalI+"");
+
+                                    int tempPriceLevel = myPlace.getPriceLevel();
+                                    if(tempPriceLevel == 1){
+                                        //tempPrice = "$";
+                                        placesList.get(finalI).setPrice("$");
+                                    }else if(tempPriceLevel == 2){
+                                        //tempPrice = "$$";
+                                        placesList.get(finalI).setPrice("$$");
+                                    }else if(tempPriceLevel == 3){
+                                        //tempPrice = "$$$";
+                                        placesList.get(finalI).setPrice("$$$");
+                                    }else if(tempPriceLevel == -1){
+                                        placesList.get(finalI).setPrice("?");
+                                    }
+                                }else{
+                                    Log.e("Error","Place not found");
+                                }
+                                Log.d("Set Place price",placesList.get(finalI).getPrice()+"");
+                                places.release();
+                            }
+                        });
+            //placesList.get(i).setPrice(tempPrice);
+            Log.d("Place price",placesList.get(i).getPrice()+"");
+        }
+    }
+
     public void clearLayout() {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llSearch);
         linearLayout.removeAllViews();
@@ -324,7 +400,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                     public void onItemClick(View view, int position) {
                         Log.d("onItemClick","position " + position);
                         Toast.makeText(SearchActivity.this, "" + placesList.get(position).getName(), Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(SearchActivity.this,PopupWindow.class));
+
+                        Intent intent = new Intent(SearchActivity.this, PopupWindow.class);
+                        intent.putExtra("INDEX",position);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -369,6 +448,19 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         } else if (mMap != null) {
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
+        }
+    }
+
+    public void onSortingList(){
+        if(sortType.equals("A-Z")){
+            Collections.sort(placesList, new RestaurantNameComparator());
+            Log.d("placesList","A-Z Sorted");
+        }else if(sortType.equals("Distance")){
+            Collections.sort(placesList, new RestaurantDistanceComparator());
+            Log.d("placesList","Distance Sorted");
+        }else if(sortType.equals("Rating")){
+            Collections.sort(placesList, new RestaurantRatingComparator());
+            Log.d("placesList","Rating Sorted");
         }
     }
 }

@@ -2,6 +2,7 @@ package uncc.ryan.clteatsdemo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.BoolRes;
 import android.support.constraint.solver.ArrayLinkedVariables;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     Spinner sortByType;
     ArrayList<String> spinSortByType = new ArrayList<>();
+
+    Switch swRandomizeByConstraints;
+    Switch swConstraintsFilter;
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -37,6 +42,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         spinSortByTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortByType = (Spinner)findViewById(R.id.spSortByPref);
         sortByType.setAdapter(spinSortByTypeAdapter);
+
+        //initialize switches
+        swRandomizeByConstraints = (Switch) findViewById(R.id.swConstraintRandomize);
+        swConstraintsFilter = (Switch) findViewById(R.id.swConstraintFilter);
     }
 
     @Override
@@ -58,6 +67,28 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
 
             editor.commit();
+
+            if(swRandomizeByConstraints.isChecked()){
+                Log.d("RandomizeByConstraints","true");
+                editor.putString("RANDOM_TYPE","true");
+            }else if(!swRandomizeByConstraints.isChecked()){
+                Log.d("RandomizeByConstraints","false");
+                editor.putString("RANDOM_TYPE","false");
+            }else{
+                Log.d("RandomizeByConstraints","default");
+                editor.putString("RANDOM_TYPE","default");
+            }
+
+            if(swConstraintsFilter.isChecked()){
+                Log.d("ConstraintFilter","true");
+                editor.putString("FILTER_CONST","true");
+            }else if(!swConstraintsFilter.isChecked()){
+                Log.d("ConstraintFilter","false");
+                editor.putString("FILTER_CONST","false");
+            }else {
+                Log.d("ConstraintFilter","default");
+                editor.putString("FILTER_CONST","default");
+            }
         }
     }
 }

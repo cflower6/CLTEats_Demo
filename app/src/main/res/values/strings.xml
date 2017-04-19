@@ -65,11 +65,12 @@
         <item>Rating</item>
         <item>A-Z</item>
     </string-array>
-    <string name="switch_RandomType">Randomize by constraints:</string>
+    <string name="switch_RandomType">Randomize results by constraints:</string>
+    <string name="switch_ResultsFilter">Filter results lacking constraints:</string>
     <string name="btn_Save">Save</string>
     <string name="app_Build_Header">Application Build</string>
-    <string name="app_BuildVersion">v0.6.6</string>
-    <string name="app_BuildDate">04/16/2017</string>
+    <string name="app_BuildVersion">v0.6.7</string>
+    <string name="app_BuildDate">04/19/2017</string>
     <!--AboutActivity-->
     <string name="about_Header">About</string>
     <string name="about_App">The new best app for restaurant discovery!</string>
@@ -82,4 +83,6 @@
     <string name="about_Team">Group 10</string>
     <!--PopupWindowResources-->
     <string name="pop_Details_Header">Details</string>
+    <string name="pop_Price_Header">Price:</string>
+    <string name="pop_Price_Var">xxx</string>
 </resources>

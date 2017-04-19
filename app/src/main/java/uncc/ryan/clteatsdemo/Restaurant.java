@@ -8,8 +8,8 @@ import android.os.Parcelable;
  */
 
 public class Restaurant {
-    String name, food_category, address, place_id;
-    double coord_lat, coord_long, distance_meters, distance_miles, price, rating;
+    String name, food_category, address, place_id, price;
+    double coord_lat, coord_long, distance_meters, distance_miles, rating;
 
     public Restaurant(){
 
@@ -35,8 +35,8 @@ public class Restaurant {
                 ", coord_lat=" + coord_lat +
                 ", coord_long=" + coord_long +
                 //", distance_meters=" + distance_meters +
-                //", distance_miles=" + distance_miles +
-                //", price=" + price +
+                ", distance_miles=" + distance_miles +
+                ", price=" + price +
                 ", rating=" + rating +
                 '}';
     }
@@ -113,11 +113,11 @@ public class Restaurant {
         this.distance_miles = distance_miles;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
     
