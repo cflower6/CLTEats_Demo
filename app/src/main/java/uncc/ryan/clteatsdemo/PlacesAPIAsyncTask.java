@@ -61,7 +61,7 @@ public class PlacesAPIAsyncTask extends AsyncTask<String, Void, ArrayList<Restau
     protected void onPostExecute(ArrayList<Restaurant> result) {
         super.onPostExecute(result);
         if (result != null) {
-            Log.d("demo", result.toString());
+            //Log.d("demo", result.toString());
             delegate.processFinish(result);
         }
     }

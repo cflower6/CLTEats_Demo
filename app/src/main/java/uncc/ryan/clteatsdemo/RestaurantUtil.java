@@ -63,6 +63,7 @@ public class RestaurantUtil {
                 }
                 event = parser.next();
             }
+            Log.d("restaurantsList",restaurantsList.toString()+"");
             return restaurantsList;
         }
     }

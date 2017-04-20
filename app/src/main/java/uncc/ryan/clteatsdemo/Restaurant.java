@@ -3,28 +3,20 @@ package uncc.ryan.clteatsdemo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by Ryrid on 3/31/2017.
  */
 
 public class Restaurant {
-    String name, food_category, address, place_id, price;
+    String name, food_category, address, place_id, price, phone_number;
     double coord_lat, coord_long, distance_meters, distance_miles, rating;
+    ArrayList<Review> reviews;
 
     public Restaurant(){
 
     }
-
-    private Restaurant(Parcel in) {
-        name = in.readString();
-        address = in.readString();
-        place_id = in.readString();
-        coord_lat = in.readDouble();
-        coord_long = in.readDouble();
-        distance_miles = in.readDouble();
-        rating = in.readDouble();
-    }
-
 
     @Override
     public String toString() {
@@ -120,5 +112,30 @@ public class Restaurant {
     public void setPrice(String price) {
         this.price = price;
     }
-    
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public ArrayList<Review> getReviews() {
+        return reviews;
+    }
+
+    public Review getReview(int index){
+        if(reviews != null) {
+            return reviews.get(index);
+        }else{
+            return null;
+        }
+    }
+
+    public void setReview(Review review) {
+        ArrayList<Review> reviewInit = new ArrayList<>();
+        reviewInit.add(review);
+        this.reviews = reviewInit;
+    }
 }

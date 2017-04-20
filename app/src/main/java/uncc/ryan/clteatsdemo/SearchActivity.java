@@ -1,6 +1,7 @@
 package uncc.ryan.clteatsdemo;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -64,13 +65,15 @@ import static uncc.ryan.clteatsdemo.R.id.start;
 import static uncc.ryan.clteatsdemo.R.styleable.MenuItem;
 
 
-public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener, PlacesAPIAsyncTask.AsyncResponse {
+public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener, PlacesAPIAsyncTask.AsyncResponse, PlacesDetailsAPIAsyncTask.AsyncResponse {
 
     public static GoogleMap mMap;
     protected LocationManager locationManager;
     protected double latitude, longitude;
     ArrayList<Address> addressList;
     static ArrayList<Restaurant> placesList;
+    static ArrayList<Review> reviewsList = new ArrayList<>();
+    static int reviewsListsize = 0;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     boolean awal = true;
@@ -78,6 +81,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     static float zoomLevel = 9.0f;
 
     GoogleApiClient mGoogleApiClient;
+
+    ProgressDialog progressDialog;
+    ProgressDialog progressDialogReviews;
 
     Spinner spinDistance;
     Spinner spinCategory;
@@ -90,11 +96,14 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     boolean onSearchRandomizedBranch = false;
 
     int randomizedListSize;
+    static int reviewsMergeSync;
 
     SharedPreferences sp;
     String sortType;
     String randomType;
     String filterConst;
+
+    RecyclerView resultsView;
 
     String tempPrice;
 
@@ -181,7 +190,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         if(v == findViewById(R.id.btn2Search)){
             onSearch();
         }else if(v == findViewById(R.id.btnSearchRandomize)){
-            onSearchRandomized = true; onSearchRandomizedBranch = true;
+            onSearchRandomized = true;
+            onSearchRandomizedBranch = true;
             onSearch();
         }else if(v == findViewById(R.id.btnRetryGPS)){
             getGPS();
@@ -245,9 +255,61 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         sb.append("&sensor=true");
         sb.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
 
+        
         Log.d("Built Search Query: ",sb.toString());
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Search Results...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+
         new PlacesAPIAsyncTask(this).execute(sb.toString());
+    }
+
+    @Override
+    public PlacesDetailsAPIAsyncTask.AsyncResponse onProcessFinish(ArrayList<Review> output) {
+        reviewsList = output;
+        Log.d("debug","reviewsList: " + reviewsList.toString());
+
+        for(int k = 0;k < placesList.size();k++){
+            for (int j = 0;j < reviewsList.size();j++){
+                String placesListID = placesList.get(k).getPlace_id();
+                String reviewsListID = reviewsList.get(j).getPlace_id();
+
+                progressDialogReviews.setMessage("Loading: " + placesList.get(k).getName());
+
+                //Log.d("placesList.size()",placesList.size()+"");
+                //Log.d("list matchup", "hereID:" + placesListID + "\nthereID:" + reviewsListID);
+                //Log.d("reviewsList.size()",reviewsList.size()+"");
+
+                if (placesListID.equals(reviewsListID)) {
+                    ArrayList<Review> tempListReviews = placesList.get(k).getReviews();
+                    //tempListReviews.add(reviewsList.get(j));
+                    placesList.get(k).setReview(reviewsList.get(j));
+                    Log.d("ID matchup","success");
+                }else{
+                    //Log.d("ID matchup","fail");
+                }
+            }
+        }
+
+        progressDialogReviews.hide();
+
+        /*for (int z = 0; z < reviewsList.size(); z++) {
+            String hereID = placesList.get(z).getPlace_id();
+            String thereID = reviewsList.get(z).getPlace_id();
+            //Log.d("placesList.size()",placesList.size()+"");
+            //Log.d("list matchup", "hereID:" + hereID + "\nthereID:" + thereID);
+            //Log.d("reviewsList.size()",reviewsList.size()+"");
+            if (hereID.equals(thereID)) {
+                Log.d("ID matchup","success");
+                placesList.get(z).setReview(reviewsList.get(z));
+            }else{
+                Log.d("ID matchup","fail");
+            }
+        }*/
+
+        return null;
     }
 
     public void getGPS(){ //has error correcting loops to retry get coordinates up to 5 times arbitrarily
@@ -307,6 +369,18 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         Log.d("getPlaceDetails","method called");
         getPlaceDetails();
 
+        reviewsMergeSync = 0;
+        while(reviewsMergeSync < placesList.size()){
+            StringBuilder sb2 = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/xml?");
+            sb2.append("placeid=" + placesList.get(reviewsMergeSync).getPlace_id());
+            sb2.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
+
+            new PlacesDetailsAPIAsyncTask(this).execute(sb2.toString());
+
+            //Log.d("reviewsMergeSync",reviewsMergeSync+"");
+            reviewsMergeSync++;
+        }
+
         Location globalLocation = new Location("global");
         globalLocation.setLatitude(latitude);
         globalLocation.setLongitude(longitude);
@@ -343,14 +417,15 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         }
 
         clearLayout();
+
         return null;
     }
 
     public void getPlaceDetails(){
         Log.d("2nd randomizedListSize",randomizedListSize+"");
         for(int i = 0;i<randomizedListSize;i++){
-            Log.d("Place name",placesList.get(i).getName()+"");
-            Log.d("Place id",placesList.get(i).getPlace_id()+"");
+            //Log.d("Place name",placesList.get(i).getName()+"");
+            //Log.d("Place id",placesList.get(i).getPlace_id()+"");
             final int finalI = i;
             Places.GeoDataApi.getPlaceById(mGoogleApiClient,
                         placesList.get(i).getPlace_id())
@@ -359,10 +434,12 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                             public void onResult(@NonNull PlaceBuffer places) {
                                 if(places.getStatus().isSuccess() && places.getCount() > 0){
                                     final Place myPlace = places.get(0);
-                                    Log.i("Info","Place found: " + myPlace.getName());
-                                    Log.i("Info","Place found price: " + myPlace.getPriceLevel()+"");
+                                    //Log.i("Info","Place found: " + myPlace.getName());
+                                    //Log.i("Info","Place found price: " + myPlace.getPriceLevel()+"");
 
-                                    Log.d("finalI",finalI+"");
+                                    //Log.i("Info","Place found phone#:" + myPlace.getPhoneNumber());
+
+                                    //Log.d("finalI",finalI+"");
 
                                     int tempPriceLevel = myPlace.getPriceLevel();
                                     if(tempPriceLevel == 1){
@@ -377,10 +454,12 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                                     }else if(tempPriceLevel == -1){
                                         placesList.get(finalI).setPrice("?");
                                     }
+
+                                    placesList.get(finalI).setPhone_number((String) myPlace.getPhoneNumber());
                                 }else{
                                     Log.e("Error","Place not found");
                                 }
-                                Log.d("Set Place price",placesList.get(finalI).getPrice()+"");
+                                //Log.d("Set Place price",placesList.get(finalI).getPrice()+"");
                                 places.release();
                             }
                         });
@@ -390,39 +469,17 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     public void clearLayout() {
+        progressDialog.hide();
+        progressDialogReviews = new ProgressDialog(this);
+        progressDialogReviews.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialogReviews.setMessage("Loading reviews...");
+        progressDialogReviews.show();
+
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llSearch);
         linearLayout.removeAllViews();
-        final RecyclerView resultsView = new RecyclerView(this);
+        resultsView = new RecyclerView(this);
         resultsView.setHasFixedSize(true);
-        resultsView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, resultsView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Log.d("onItemClick","position " + position);
-                        Toast.makeText(SearchActivity.this, "" + placesList.get(position).getName(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(SearchActivity.this, PopupWindow.class);
-                        intent.putExtra("INDEX",position);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        Log.d("onLongItemClick","position " + position);
-                        PopupMenu longClickMenu = new PopupMenu(SearchActivity.this, resultsView);
-                        longClickMenu.getMenuInflater().inflate(R.menu.popup_menu_longclick, longClickMenu.getMenu());
-
-                        longClickMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(android.view.MenuItem item) {
-                                Toast.makeText(SearchActivity.this, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
-                                return false;
-                            }
-                        });
-                        longClickMenu.show();
-                    }
-                })
-        );
+        resultsListClickListeners();
         linearLayout.addView(resultsView);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         resultsView.setLayoutManager(llm);
@@ -462,5 +519,42 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             Collections.sort(placesList, new RestaurantRatingComparator());
             Log.d("placesList","Rating Sorted");
         }
+    }
+
+    public void resultsListClickListeners(){
+        resultsView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, resultsView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d("onItemClick","position " + position);
+                        //Toast.makeText(SearchActivity.this, "" + placesList.get(position).getName(), Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(SearchActivity.this, PopupWindow.class);
+                        intent.putExtra("INDEX",position);
+
+                        if(placesList.get(position).getReview(0) != null) {
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(SearchActivity.this, "Still Loading...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        Log.d("onLongItemClick","position " + position);
+                        PopupMenu longClickMenu = new PopupMenu(SearchActivity.this, resultsView);
+                        longClickMenu.getMenuInflater().inflate(R.menu.popup_menu_longclick, longClickMenu.getMenu());
+
+                        longClickMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(android.view.MenuItem item) {
+                                Toast.makeText(SearchActivity.this, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+                        longClickMenu.show();
+                    }
+                })
+        );
     }
 }
