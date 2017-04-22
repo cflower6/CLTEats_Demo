@@ -53,6 +53,8 @@
         <activity android:name=".AboutActivity"/>
         <activity android:name=".PopupWindow"
             android:theme="@style/AppTheme.CustomTheme"/>
+        <activity android:name=".PopupWindowActions"
+            android:theme="@style/AppTheme.CustomTheme"/>
     </application>
 
 </manifest>

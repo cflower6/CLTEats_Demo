@@ -216,7 +216,6 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="@string/tvLatPlaceholder"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="10sp" />
 
@@ -226,7 +225,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:text="@string/tvLatPlaceholder"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="10sp" />
             </LinearLayout>

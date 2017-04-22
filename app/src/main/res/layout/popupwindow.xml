@@ -69,25 +69,17 @@
             android:id="@+id/imageView5"
             android:layout_width="match_parent"
             android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
             android:background="#C1AF6C" />
 
-        <TextView
-            android:id="@+id/tvReviewUserName"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvReviewsList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
-            android:text="TextView"
-            android:textColor="@android:color/background_light" />
-
-        <TextView
-            android:id="@+id/tvReviewUserComment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_weight="0.86"
-            android:text="TextView"
-            android:textColor="@android:color/background_light" />
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:nestedScrollingEnabled="false"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical" />
 
     </LinearLayout>
 

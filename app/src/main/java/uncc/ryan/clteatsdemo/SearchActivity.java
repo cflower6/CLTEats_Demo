@@ -3,6 +3,7 @@ package uncc.ryan.clteatsdemo;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +23,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -73,14 +76,18 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     ArrayList<Address> addressList;
     static ArrayList<Restaurant> placesList;
     static ArrayList<Review> reviewsList = new ArrayList<>();
-    static int reviewsListsize = 0;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    boolean awal = true;
 
     static float zoomLevel = 9.0f;
 
     GoogleApiClient mGoogleApiClient;
+
+    LocationManager mLocationManager;
+    LocationListener mLocationListener;
+
+    LatLng latLng;
+    Location mLocation;
 
     ProgressDialog progressDialog;
     ProgressDialog progressDialogReviews;
@@ -105,7 +112,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     RecyclerView resultsView;
 
-    String tempPrice;
 
     GetCurrentLocationTask locationListener = new GetCurrentLocationTask();
 
@@ -118,22 +124,25 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                 .findFragmentById(googleMap);
         mapFragment.getMapAsync(this);
 
-        sp = this.getSharedPreferences("MyPref",Context.MODE_PRIVATE);
-        sortType = sp.getString("SORT_TYPE","Distance");//default sort type = distance
-        randomType = sp.getString("RANDOM_TYPE","TRUE");//default randomize = use constraints
-        filterConst = sp.getString("FILTER_CONST","TRUE");//default filter = remove places without constraint data
-        Log.d("sp.SORT_TYPE",sortType+"");
-        Log.d("sp.RANDOM_TYPE",randomType+"");
-        Log.d("sp.FILTER_CONST",filterConst+"");
+        sp = this.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        sortType = sp.getString("SORT_TYPE", "Distance");//default sort type = distance
+        randomType = sp.getString("RANDOM_TYPE", "TRUE");//default randomize = use constraints
+        filterConst = sp.getString("FILTER_CONST", "TRUE");//default filter = remove places without constraint data
+        Log.d("sp.SORT_TYPE", sortType + "");
+        Log.d("sp.RANDOM_TYPE", randomType + "");
+        Log.d("sp.FILTER_CONST", filterConst + "");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
                 .enableAutoManage(this, this)
                 .build();
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        /*locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = locationManager.getBestProvider(criteria, true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -143,57 +152,116 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         if(location != null){
             onLocationChanged(location);
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, this.locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, this.locationListener);*/
 
         //setOnClickListeners
         findViewById(R.id.btn2Search).setOnClickListener(this);
         findViewById(R.id.btnSearchRandomize).setOnClickListener(this);
         findViewById(R.id.btnRetryGPS).setOnClickListener(this);
 
-        tvLat = (TextView)findViewById(R.id.tvLatitude);
-        tvLong = (TextView)findViewById(R.id.tvLongitude);
+        tvLat = (TextView) findViewById(R.id.tvLatitude);
+        tvLong = (TextView) findViewById(R.id.tvLongitude);
 
         //initalize spinners
-            ArrayAdapter spinDistanceAdapter = ArrayAdapter.createFromResource(this,R.array.distance_array,R.layout.spinner_item_custom);
-            spinDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinDistance = (Spinner)findViewById(R.id.spinDistance);
-            spinDistance.setAdapter(spinDistanceAdapter);
+        ArrayAdapter spinDistanceAdapter = ArrayAdapter.createFromResource(this, R.array.distance_array, R.layout.spinner_item_custom);
+        spinDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinDistance = (Spinner) findViewById(R.id.spinDistance);
+        spinDistance.setAdapter(spinDistanceAdapter);
 
-            ArrayAdapter spinCategoryAdapter = ArrayAdapter.createFromResource(this,R.array.cuisine_array,R.layout.spinner_item_custom);
-            spinCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinCategory = (Spinner)findViewById(R.id.spinCategory);
-            spinCategory.setAdapter(spinCategoryAdapter);
+        ArrayAdapter spinCategoryAdapter = ArrayAdapter.createFromResource(this, R.array.cuisine_array, R.layout.spinner_item_custom);
+        spinCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinCategory = (Spinner) findViewById(R.id.spinCategory);
+        spinCategory.setAdapter(spinCategoryAdapter);
 
-            ArrayAdapter spinPriceAdapter = ArrayAdapter.createFromResource(this,R.array.price_array,R.layout.spinner_item_custom);
-            spinPriceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinPrice = (Spinner)findViewById(R.id.spinPrice);
-            spinPrice.setAdapter(spinPriceAdapter);
+        ArrayAdapter spinPriceAdapter = ArrayAdapter.createFromResource(this, R.array.price_array, R.layout.spinner_item_custom);
+        spinPriceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinPrice = (Spinner) findViewById(R.id.spinPrice);
+        spinPrice.setAdapter(spinPriceAdapter);
 
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        /*LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 1, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 1, locationListener);*/
 
     }
 
     @Override
-    public void onLocationChanged(Location location){
-        locationManager.removeUpdates(this.locationListener);
+    protected void onResume() {
+        super.onResume();
+
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d("GPS Provider", "not enabled");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("GPS Not Enabled")
+                    .setMessage("Would you like to enable the GPS settings?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    finish();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            mLocationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    tvLat.setText(String.valueOf(latitude));
+                    tvLong.setText(String.valueOf(longitude));
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 50, mLocationListener);
+
+            //mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            //latLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+            //latitude = latLng.latitude;
+            //longitude = latLng.longitude;
+        }
     }
 
     @Override
     public void onClick(View v) {
-        if(v == findViewById(R.id.btn2Search)){
+        if (v == findViewById(R.id.btn2Search)) {
+            getGPS();
             onSearch();
-        }else if(v == findViewById(R.id.btnSearchRandomize)){
+        } else if (v == findViewById(R.id.btnSearchRandomize)) {
             onSearchRandomized = true;
             onSearchRandomizedBranch = true;
             onSearch();
-        }else if(v == findViewById(R.id.btnRetryGPS)){
+        } else if (v == findViewById(R.id.btnRetryGPS)) {
             getGPS();
         }
     }
@@ -203,42 +271,45 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         mMap = googleMap;
         enableMyLocation();
 
-        LatLng latLngDefault = new LatLng(35.3056877,-80.7322255);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngDefault,9.0f));
+        LatLng latLngDefault = new LatLng(35.3056877, -80.7322255);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngDefault, 9.0f));
 
-        if(latitude != 0.0 && longitude != 0.0) {
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
+
+        if (latitude != 0.0 && longitude != 0.0) {
             LatLng latlng = new LatLng(latitude, longitude);
             //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latlng);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,8.0f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 8.0f));
         }
     }
 
-    public void moveMapCamera(){
-        LatLng latlng = new LatLng(latitude,longitude);
-        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(latlng);
-        //mMap.animateCamera(cameraUpdate,1000,null);
-        if(latitude != 0.0 && longitude != 0.0){
+    public void moveMapCamera() {
+        LatLng latlng = new LatLng(latitude, longitude);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoomLevel));
+
+        /*if(latitude != 0.0 && longitude != 0.0){
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,zoomLevel));
-        }
+        }*/
     }
 
-    public void onSearch(){
+    public void onSearch() {
         //TO DO: populate spinners
         String maxDistance = spinDistance.getSelectedItem().toString();
-            String radius = null;
-            if(maxDistance.equals("5")) {
-                radius = "8047";
-                zoomLevel = 11.5f;
-            }else if(maxDistance.equals("10")){
-                radius = "16093";
-                zoomLevel = 10.0f;
-            }else if(maxDistance.equals("20")){
-                radius = "32187";
-                zoomLevel = 9.5f;
-            }else if(maxDistance.equals("30")){
-                radius = "48280";
-                zoomLevel = 9.3f;
-            }
+        String radius = null;
+        if (maxDistance.equals("5")) {
+            radius = "8047";
+            zoomLevel = 11.5f;
+        } else if (maxDistance.equals("10")) {
+            radius = "16093";
+            zoomLevel = 10.0f;
+        } else if (maxDistance.equals("20")) {
+            radius = "32187";
+            zoomLevel = 9.5f;
+        } else if (maxDistance.equals("30")) {
+            radius = "48280";
+            zoomLevel = 9.3f;
+        }
 
         String foodCategory = spinCategory.getSelectedItem().toString();
 
@@ -246,7 +317,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
         getGPS();
 
-        Log.d("Set current coordinates",latitude + ", " + longitude);
+        Log.d("Set current coordinates", latitude + ", " + longitude);
 
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/xml?");
         sb.append("location=" + latitude + "," + longitude);
@@ -255,8 +326,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         sb.append("&sensor=true");
         sb.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
 
-        
-        Log.d("Built Search Query: ",sb.toString());
+
+        Log.d("Built Search Query: ", sb.toString());
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading Search Results...");
@@ -269,10 +340,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     public PlacesDetailsAPIAsyncTask.AsyncResponse onProcessFinish(ArrayList<Review> output) {
         reviewsList = output;
-        Log.d("debug","reviewsList: " + reviewsList.toString());
+        Log.d("debug", "reviewsList: " + reviewsList.toString());
 
-        for(int k = 0;k < placesList.size();k++){
-            for (int j = 0;j < reviewsList.size();j++){
+        for (int k = 0; k < placesList.size(); k++) {
+            for (int j = 0; j < reviewsList.size(); j++) {
                 String placesListID = placesList.get(k).getPlace_id();
                 String reviewsListID = reviewsList.get(j).getPlace_id();
 
@@ -286,8 +357,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                     ArrayList<Review> tempListReviews = placesList.get(k).getReviews();
                     //tempListReviews.add(reviewsList.get(j));
                     placesList.get(k).setReview(reviewsList.get(j));
-                    Log.d("ID matchup","success");
-                }else{
+                    Log.d("ID matchup", "success");
+                } else {
                     //Log.d("ID matchup","fail");
                 }
             }
@@ -312,9 +383,20 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         return null;
     }
 
-    public void getGPS(){ //has error correcting loops to retry get coordinates up to 5 times arbitrarily
-        longitude = locationListener.thisLongitude;
+    public void getGPS() { //has error correcting loops to retry get coordinates up to 5 times arbitrarily
+        //longitude = locationListener.thisLongitude;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        latLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+        latitude = latLng.latitude;
+        longitude = latLng.longitude;
+
         tvLong.setText(String.valueOf(longitude));
+        tvLat.setText(String.valueOf(latitude));
+
         if(longitude == 0.0 || latitude == 0.0){
             for(int a = 0;a < 6;a++) {
                 if(longitude == 0.0) {
@@ -343,12 +425,14 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
 
+    @Override
+    public void onLocationChanged(Location location) {
     }
 
     @Override
@@ -374,6 +458,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             StringBuilder sb2 = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/xml?");
             sb2.append("placeid=" + placesList.get(reviewsMergeSync).getPlace_id());
             sb2.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
+
+            Log.d("Built Search Query:",""+sb2.toString());
 
             new PlacesDetailsAPIAsyncTask(this).execute(sb2.toString());
 
@@ -489,8 +575,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         for (int k = 0; k < placesList.size(); k++){
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(placesList.get(k).getCoord_lat(), placesList.get(k).getCoord_long()))
-                    .title(placesList.get(k).getName()))
-                    .setSnippet(k + "");
+                    .title(placesList.get(k).getName()));
+                    //.setSnippet(k + "");
         }
 
         moveMapCamera();
@@ -542,7 +628,17 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                     @Override
                     public void onLongItemClick(View view, int position) {
                         Log.d("onLongItemClick","position " + position);
-                        PopupMenu longClickMenu = new PopupMenu(SearchActivity.this, resultsView);
+
+                        Intent intent = new Intent(SearchActivity.this, PopupWindowActions.class);
+                        intent.putExtra("INDEX",position);
+
+                        if(placesList.get(position) != null){
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(SearchActivity.this, "Error: Couldn't find object!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        /*PopupMenu longClickMenu = new PopupMenu(SearchActivity.this, resultsView);
                         longClickMenu.getMenuInflater().inflate(R.menu.popup_menu_longclick, longClickMenu.getMenu());
 
                         longClickMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -552,7 +648,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                                 return false;
                             }
                         });
-                        longClickMenu.show();
+                        longClickMenu.show();*/
                     }
                 })
         );

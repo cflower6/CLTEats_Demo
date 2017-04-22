@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#034125"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="128dp"
+        android:layout_weight="0.06"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight=".5"
+            android:background="#756733"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <Button
+                android:id="@+id/btnPopActionAddFavorite"
+                android:layout_width="205dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="#C1AF6C"
+                android:text="@string/pop_AddFavorite"
+                android:textColor="#034125"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight=".5"
+            android:background="#756733"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <Button
+                android:id="@+id/btnPopActionViewDetails"
+                android:layout_width="205dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="#C1AF6C"
+                android:text="@string/pop_ViewDetails"
+                android:textColor="#034125"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

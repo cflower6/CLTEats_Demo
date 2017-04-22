@@ -41,10 +41,9 @@ public class RestaurantDetailsUtil {
                             }
                             Log.d("debug","XMLparse: UserName: " + review.getUserName());
                         }else if(name.equals("aspect")){
-                            parser.nextTag();
-                            if(name.equals("rating")){
-                                review.setUserRating(Integer.parseInt(parser.nextText().trim()));
-                            }
+                            //if(name.equals("rating")){
+                                //eview.setUserRating(Integer.parseInt(parser.nextText().trim()));
+                            //}
                             Log.d("debug","XMLparse: UserRating: " + review.getUserRating());
                         }else if(name.equals("place_id")){
                             if(hasItem){

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.TextView;
@@ -50,12 +52,15 @@ public class PopupWindow extends Activity {
         tvPhoneNumber.setText(placesList.get(index).getPhone_number());
 
         reviewsList = placesList.get(index).getReviews();
+        Log.d("reviewsList.size():",reviewsList.size()+"");
         //Log.d("reviewsList",reviewsList.toString()+"");
 
-        TextView tvUserName = (TextView) findViewById(R.id.tvReviewUserName);
-        tvUserName.setText(SearchActivity.placesList.get(index).getReview(0).getUserName());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 
-        TextView tvUserComment = (TextView) findViewById(R.id.tvReviewUserComment);
-        tvUserComment.setText(placesList.get(index).getReview(0).getUserComment());
+        ReviewAdapter adapter = new ReviewAdapter(this, reviewsList);
+        RecyclerView rvReviewsList = (RecyclerView)findViewById(R.id.rvReviewsList);
+        rvReviewsList.setHasFixedSize(true);
+        rvReviewsList.setLayoutManager(layoutManager);
+        rvReviewsList.setAdapter(adapter);
     }
 }
