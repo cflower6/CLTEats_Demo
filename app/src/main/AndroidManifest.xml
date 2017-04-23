@@ -51,11 +51,17 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".AboutActivity"/>
-        <activity android:name=".PopupWindow"
-            android:theme="@style/AppTheme.CustomTheme"/>
-        <activity android:name=".PopupWindowActions"
-            android:theme="@style/AppTheme.CustomTheme"/>
+        <activity android:name=".AboutActivity" />
+        <activity
+            android:name=".PopupWindow"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity
+            android:name=".PopupWindowActions"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity android:name=".FavoritesActivity"/>
+        <activity
+            android:name=".PopupWindowFavActions"
+            android:theme="@style/AppTheme.CustomTheme" />
     </application>
 
 </manifest>

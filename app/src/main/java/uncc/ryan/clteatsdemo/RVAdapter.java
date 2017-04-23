@@ -1,5 +1,6 @@
 package uncc.ryan.clteatsdemo;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
  */
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHolder> {
+
     public static class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         TextView restName;
         TextView restAddress;
@@ -50,7 +52,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
 
     ArrayList<Restaurant> restaurantArrayList;
 
-    public RVAdapter(SearchActivity searchResultsActivity, ArrayList<Restaurant> restaurants){
+    public RVAdapter(Activity searchResultsActivity, ArrayList<Restaurant> restaurants){
         restaurantArrayList = restaurants;
     }
 

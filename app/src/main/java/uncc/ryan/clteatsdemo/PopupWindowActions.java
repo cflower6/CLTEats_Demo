@@ -45,7 +45,7 @@ public class PopupWindowActions extends Activity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if(v == findViewById(R.id.btnPopActionAddFavorite)){
-            Toast.makeText(this, "Add To Favorites", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Add To Favorites", Toast.LENGTH_SHORT).show();
             //TODO: add current restaurant to arrayList<Restaurant> favoritesList in SearchActivity
 
             SearchActivity.favoritesList.add(SearchActivity.placesList.get(index)); //Error line

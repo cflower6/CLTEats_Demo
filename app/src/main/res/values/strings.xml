@@ -60,7 +60,7 @@
     <string name="about_App">The new best app for restaurant discovery!</string>
     <string name="about_UserNotes">User Notes</string>
     <string name="about_Distance">- Distance is currently straight-line only</string>
-    <string name="about_GPS">- If GPS is buggy hit the black X to refresh it</string>
+    <string name="about_GPS">- To launch a navigation touch the pin corresponding to your restaurant choice, then touch one of the buttons that popup on the map.</string>
     <string name="about_Resources">Powered By</string>
     <string name="about_GoogleMapsAPI">Google Maps API</string>
     <string name="about_BuildTeam">Build Team</string>
@@ -75,6 +75,7 @@
     <!--PopupWindowActions Resources-->
     <string name="pop_AddFavorite">Add to Favorites</string>
     <string name="pop_ViewDetails">View Details</string>
+    <string name="pop_DeleteFavorite">Delete Favorite</string>
     <!--SettingsActivity-->
     <string name="set_Prefs_Header">Preferences</string>
     <string name="set_sortBy">Sort Lists by:</string>
@@ -88,6 +89,6 @@
     <string name="switch_PushNotifications">Enable Push Notifications:</string>
     <string name="btn_Save">Save</string>
     <string name="app_Build_Header">Application Build</string>
-    <string name="app_BuildVersion">v0.7.1</string>
+    <string name="app_BuildVersion">v0.7.2</string>
     <string name="app_BuildDate">04/23/2017</string>
 </resources>

@@ -59,15 +59,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,10 +75,11 @@ import java.util.Random;
 import java.util.logging.Handler;
 
 import static java.lang.Math.abs;
+import static uncc.ryan.clteatsdemo.FileUtil.writeXml;
+import static uncc.ryan.clteatsdemo.FileUtil.xmlToObject;
 import static uncc.ryan.clteatsdemo.R.id.dark;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
 import static uncc.ryan.clteatsdemo.R.id.start;
-import static uncc.ryan.clteatsdemo.R.string.google_maps_key;
 import static uncc.ryan.clteatsdemo.R.styleable.MenuItem;
 
 
@@ -726,96 +718,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         File dir = getFilesDir();
         File dirFile = new File(dir, "favoriteslist.xml");
         boolean deletedFile = dirFile.delete();
-    }
-
-    private ArrayList<Restaurant> xmlToObject(String filename){
-        try {
-            FileInputStream fis = new FileInputStream(filename);
-            InputStreamReader isr = new InputStreamReader(fis);
-            char[] inputBuffer = new char[fis.available()];
-            isr.read(inputBuffer);
-            String data = new String(inputBuffer);
-            isr.close();
-            fis.close();
-
-            Log.d("XmlToObject: ","String data="+data.toString());
-
-            InputStream is = new ByteArrayInputStream(data.getBytes("UTF-8"));
-            return XmlStorageUtil.XmlStoragePullParser.parseXmlStorage(is);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void writeXml(ArrayList<Restaurant> restaurants, String filename){
-        try{
-            Log.d("Info","writeXml() running...");
-
-            FileOutputStream fos = new FileOutputStream(new File(filename));
-            XmlSerializer serializer = Xml.newSerializer();
-            serializer.setOutput(fos, "UTF-8");
-            serializer.startDocument(null, Boolean.valueOf(true));
-            //serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true");
-
-            Log.d("Write to file", "Size(): " + favoritesList.size() + "\ntoString: " + favoritesList.toString());
-
-            serializer.startTag(null, "root");
-            for(int j=0;j<favoritesList.size();j++){
-                serializer.startTag(null,"restaurant");
-                    serializer.startTag(null,"name");
-                    serializer.text(favoritesList.get(j).getName());
-                    serializer.endTag(null, "name");
-
-                    serializer.startTag(null, "food_category");
-                    serializer.text("null");
-                    serializer.endTag(null, "food_category");
-
-                    serializer.startTag(null,"address");
-                    serializer.text(favoritesList.get(j).getAddress());
-                    serializer.endTag(null, "address");
-
-                    serializer.startTag(null, "place_id");
-                    serializer.text(favoritesList.get(j).getPlace_id());
-                    serializer.endTag(null, "place_id");
-
-                    serializer.startTag(null, "price");
-                    serializer.text(favoritesList.get(j).getPrice());
-                    serializer.endTag(null, "price");
-
-                    serializer.startTag(null, "phone_number");
-                    serializer.text(favoritesList.get(j).getPhone_number());
-                    serializer.endTag(null, "phone_number");
-
-                    serializer.startTag(null, "coord_lat");
-                    serializer.text(String.valueOf(favoritesList.get(j).getCoord_lat()));
-                    serializer.endTag(null, "coord_lat");
-
-                    serializer.startTag(null, "coord_long");
-                    serializer.text(String.valueOf(favoritesList.get(j).getCoord_long()));
-                    serializer.endTag(null, "coord_long");
-
-                    serializer.startTag(null, "distance_miles");
-                    serializer.text(String.valueOf(favoritesList.get(j).getDistance_miles()));
-                    serializer.endTag(null, "distance_miles");
-
-                    serializer.startTag(null, "rating");
-                    serializer.text(String.valueOf(favoritesList.get(j).getRating()));
-                    serializer.endTag(null, "rating");
-                serializer.endTag(null,"restaurant");
-            }
-            serializer.endDocument();
-            serializer.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
