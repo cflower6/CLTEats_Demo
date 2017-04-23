@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,9 +47,16 @@ public class PopupWindowActions extends Activity implements View.OnClickListener
         if(v == findViewById(R.id.btnPopActionAddFavorite)){
             Toast.makeText(this, "Add To Favorites", Toast.LENGTH_SHORT).show();
             //TODO: add current restaurant to arrayList<Restaurant> favoritesList in SearchActivity
+
+            SearchActivity.favoritesList.add(SearchActivity.placesList.get(index)); //Error line
+            if(SearchActivity.favoritesList.size() != 0) {
+                Log.d("favoritesList Status", "Size(): " + SearchActivity.favoritesList.size() + "\ntoString: " + SearchActivity.favoritesList.toString());
+            }
+            finish();
         }else if(v == findViewById(R.id.btnPopActionViewDetails)){
             Toast.makeText(this, "View Details", Toast.LENGTH_SHORT).show();
             //TODO: not sure what this will do yet
+            finish();
         }
 
     }

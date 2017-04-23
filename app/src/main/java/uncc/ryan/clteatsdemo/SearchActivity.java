@@ -29,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Xml;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -55,6 +56,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,6 +77,7 @@ import static java.lang.Math.abs;
 import static uncc.ryan.clteatsdemo.R.id.dark;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
 import static uncc.ryan.clteatsdemo.R.id.start;
+import static uncc.ryan.clteatsdemo.R.string.google_maps_key;
 import static uncc.ryan.clteatsdemo.R.styleable.MenuItem;
 
 
@@ -73,9 +86,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     public static GoogleMap mMap;
     protected LocationManager locationManager;
     protected double latitude, longitude;
-    ArrayList<Address> addressList;
+    static ArrayList<Restaurant> favoritesList = new ArrayList<>();
     static ArrayList<Restaurant> placesList;
     static ArrayList<Review> reviewsList = new ArrayList<>();
+    final String API_KEY = "AIzaSyDQR8gmJvYApRaEcepi9SZ4L9_TY1oOnMY";
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -106,12 +120,12 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     static int reviewsMergeSync;
 
     SharedPreferences sp;
+    SharedPreferences.Editor editor;
     String sortType;
     String randomType;
     String filterConst;
 
     RecyclerView resultsView;
-
 
     GetCurrentLocationTask locationListener = new GetCurrentLocationTask();
 
@@ -125,12 +139,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
 
         sp = this.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        editor = sp.edit();
         sortType = sp.getString("SORT_TYPE", "Distance");//default sort type = distance
         randomType = sp.getString("RANDOM_TYPE", "TRUE");//default randomize = use constraints
         filterConst = sp.getString("FILTER_CONST", "TRUE");//default filter = remove places without constraint data
         Log.d("sp.SORT_TYPE", sortType + "");
         Log.d("sp.RANDOM_TYPE", randomType + "");
         Log.d("sp.FILTER_CONST", filterConst + "");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Search Results...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        progressDialogReviews = new ProgressDialog(this);
+        progressDialogReviews.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialogReviews.setMessage("Loading reviews...");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -324,14 +347,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         sb.append("&radius=" + radius);
         sb.append("&types=restaurant");
         sb.append("&sensor=true");
-        sb.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
+        sb.append("&key=" + API_KEY);
 
 
         Log.d("Built Search Query: ", sb.toString());
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Search Results...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
 
         new PlacesAPIAsyncTask(this).execute(sb.toString());
@@ -365,20 +385,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         }
 
         progressDialogReviews.hide();
-
-        /*for (int z = 0; z < reviewsList.size(); z++) {
-            String hereID = placesList.get(z).getPlace_id();
-            String thereID = reviewsList.get(z).getPlace_id();
-            //Log.d("placesList.size()",placesList.size()+"");
-            //Log.d("list matchup", "hereID:" + hereID + "\nthereID:" + thereID);
-            //Log.d("reviewsList.size()",reviewsList.size()+"");
-            if (hereID.equals(thereID)) {
-                Log.d("ID matchup","success");
-                placesList.get(z).setReview(reviewsList.get(z));
-            }else{
-                Log.d("ID matchup","fail");
-            }
-        }*/
 
         return null;
     }
@@ -457,7 +463,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         while(reviewsMergeSync < placesList.size()){
             StringBuilder sb2 = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/xml?");
             sb2.append("placeid=" + placesList.get(reviewsMergeSync).getPlace_id());
-            sb2.append("&key=AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ");
+            sb2.append("&key=" + API_KEY);
 
             Log.d("Built Search Query:",""+sb2.toString());
 
@@ -556,9 +562,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     public void clearLayout() {
         progressDialog.hide();
-        progressDialogReviews = new ProgressDialog(this);
-        progressDialogReviews.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialogReviews.setMessage("Loading reviews...");
         progressDialogReviews.show();
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llSearch);
@@ -607,6 +610,192 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         }
     }
 
+    @Override
+    public void onBackPressed(){
+        Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
+
+        //TODO:if file exists read from ... else write favoritesList to file
+
+        if(sp.contains("FILE_PATH")){
+            String spFilePath = sp.getString("FILE_PATH",String.valueOf(getApplicationContext().getFilesDir())+"/favorites.xml");
+            Log.d("sp.FILE_PATH",spFilePath+"");
+            File file = new File(spFilePath);
+            if(file.exists()){
+                //TODO:read ... parse ... to favoritesList ... destroy file then write new file
+                //parse file
+                //xmlToString(spFilePath);
+                xmlToObject(spFilePath);
+                Log.d("Info","xmlToString called...");
+                //destroy file
+                file.delete();
+                //write file
+                writeXml(favoritesList,spFilePath);
+            }else{
+                //create file
+                writeXml(favoritesList,spFilePath);
+                Log.d("Info","writeXml() called...");
+                //write file
+            }
+        }else{
+            File path = getApplicationContext().getFilesDir();
+            StringBuilder filePath = new StringBuilder(String.valueOf(path));
+            filePath.append("/favoriteslist.xml");
+            String filepathSTR = filePath.toString();
+
+            Log.d("sp.FILE_PATH",filepathSTR+"");
+
+            editor.putString("FILE_PATH", filepathSTR+"");
+            editor.commit();
+
+            File file = new File(filepathSTR);
+            if(file.exists()){
+                //TODO:read ... parse ... to favoritesList ... destroy file then write new file
+                //parse file
+                //xmlToString(filepathSTR);
+                xmlToObject(filepathSTR);
+                Log.d("Info","xmlToString called...");
+                //destroy file
+                file.delete();
+                //write file
+                writeXml(favoritesList, filepathSTR);
+                Log.d("Info","writeXml() called...");
+            }else{
+                //create file
+                writeXml(favoritesList,filepathSTR);
+                Log.d("Info","writeXml() called...");
+                //write file
+            }
+        }
+
+        finish();
+    }
+
+    private void xmlToObject(String filename){
+        try {
+            FileInputStream fis = new FileInputStream(filename);
+            InputStreamReader isr = new InputStreamReader(fis);
+            char[] inputBuffer = new char[fis.available()];
+            isr.read(inputBuffer);
+            String data = new String(inputBuffer);
+            isr.close();
+            fis.close();
+
+            InputStream is = new ByteArrayInputStream(data.getBytes("UTF-8"));
+
+            Log.d("XmlToObject: ","String data="+data.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void xmlToString(String filename){
+        Log.d("Info","xmlToString() running...");
+        int fileLength = (int)filename.length();
+
+        byte[] bytes = new byte[fileLength];
+
+        try{
+            FileInputStream in = new FileInputStream(filename); Log.d("FileInputStream",filename+"");
+            in.read(bytes); Log.d("in.read",in.toString()+"");
+            in.close();
+
+            String contents = new String(bytes);
+            Log.d("File contents:",contents+"");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeXml(ArrayList<Restaurant> restaurants, String filename){
+        try{
+            Log.d("Info","writeXml() running...");
+
+            FileOutputStream fos = new FileOutputStream(new File(filename));
+            XmlSerializer serializer = Xml.newSerializer();
+            serializer.setOutput(fos, "UTF-8");
+            serializer.startDocument(null, Boolean.valueOf(true));
+            //serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true");
+
+            Log.d("Write to file", "Size(): " + favoritesList.size() + "\ntoString: " + favoritesList.toString());
+
+            serializer.startTag(null, "root");
+            for(int j=0;j<favoritesList.size();j++){
+                serializer.startTag(null,"restaurant");
+                    serializer.startTag(null,"name");
+                    serializer.text(favoritesList.get(j).getName());
+                    serializer.endTag(null, "name");
+
+                    serializer.startTag(null, "food_category");
+                    serializer.text("null");
+                    serializer.endTag(null, "food_category");
+
+                    serializer.startTag(null,"address");
+                    serializer.text(favoritesList.get(j).getAddress());
+                    serializer.endTag(null, "address");
+
+                    serializer.startTag(null, "place_id");
+                    serializer.text(favoritesList.get(j).getPlace_id());
+                    serializer.endTag(null, "place_id");
+
+                    serializer.startTag(null, "price");
+                    serializer.text(favoritesList.get(j).getPrice());
+                    serializer.endTag(null, "price");
+
+                    serializer.startTag(null, "phone_number");
+                    serializer.text(favoritesList.get(j).getPhone_number());
+                    serializer.endTag(null, "phone_number");
+
+                    serializer.startTag(null, "coord_lat");
+                    serializer.text(String.valueOf(favoritesList.get(j).getCoord_lat()));
+                    serializer.endTag(null, "coord_lat");
+
+                    serializer.startTag(null, "coord_long");
+                    serializer.text(String.valueOf(favoritesList.get(j).getCoord_long()));
+                    serializer.endTag(null, "coord_long");
+
+                    serializer.startTag(null, "distance_miles");
+                    serializer.text(String.valueOf(favoritesList.get(j).getDistance_miles()));
+                    serializer.endTag(null, "distance_miles");
+
+                    serializer.startTag(null, "rating");
+                    serializer.text(String.valueOf(favoritesList.get(j).getRating()));
+                    serializer.endTag(null, "rating");
+                serializer.endTag(null,"restaurant");
+            }
+            serializer.endDocument();
+            serializer.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        if(progressDialogReviews.isShowing()) {
+            progressDialogReviews.dismiss();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        if(progressDialogReviews.isShowing()) {
+            progressDialogReviews.dismiss();
+        }
+    }
+
     public void resultsListClickListeners(){
         resultsView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, resultsView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -637,18 +826,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                         }else{
                             Toast.makeText(SearchActivity.this, "Error: Couldn't find object!", Toast.LENGTH_SHORT).show();
                         }
-
-                        /*PopupMenu longClickMenu = new PopupMenu(SearchActivity.this, resultsView);
-                        longClickMenu.getMenuInflater().inflate(R.menu.popup_menu_longclick, longClickMenu.getMenu());
-
-                        longClickMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(android.view.MenuItem item) {
-                                Toast.makeText(SearchActivity.this, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
-                                return false;
-                            }
-                        });
-                        longClickMenu.show();*/
                     }
                 })
         );

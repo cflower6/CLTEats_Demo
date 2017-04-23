@@ -66,8 +66,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 Log.d("sp.SORT_TYPE","SET TO DEFAULT");
             }
 
-            editor.commit();
-
             if(swRandomizeByConstraints.isChecked()){
                 Log.d("RandomizeByConstraints","true");
                 editor.putString("RANDOM_TYPE","true");
@@ -89,6 +87,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 Log.d("ConstraintFilter","default");
                 editor.putString("FILTER_CONST","default");
             }
+
+            editor.commit();
         }
     }
 }
