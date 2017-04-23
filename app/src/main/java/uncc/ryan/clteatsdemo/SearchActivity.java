@@ -56,7 +56,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -617,26 +627,43 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         //TODO:if file exists read from ... else write favoritesList to file
 
         if(sp.contains("FILE_PATH")){
+            Log.d("sp.FILE_PATH","true");
             String spFilePath = sp.getString("FILE_PATH",String.valueOf(getApplicationContext().getFilesDir())+"/favorites.xml");
             Log.d("sp.FILE_PATH",spFilePath+"");
             File file = new File(spFilePath);
             if(file.exists()){
                 //TODO:read ... parse ... to favoritesList ... destroy file then write new file
                 //parse file
-                //xmlToString(spFilePath);
-                xmlToObject(spFilePath);
-                Log.d("Info","xmlToString called...");
+                ArrayList<Restaurant> storageList = new ArrayList<Restaurant>(xmlToObject(spFilePath));
+                for(int i=0;i<storageList.size();i++){
+                    if(!favoritesList.contains(storageList.get(i))) {
+                        favoritesList.add(storageList.get(i));
+                        Log.d("StorageList","Element copied to favList");
+                    }else{
+                        Log.d("StorageList","Element ignored as duplicate");
+                    }
+                }
+                Log.d("Info","xmlToObject called...");
                 //destroy file
-                file.delete();
+                Log.d("DeleteThisFile()","called...");
+                Log.d("pre-del:if-exists",String.valueOf(file.exists())+"");
+                deleteThisFile();
+                Log.d("post-del:if-exists",String.valueOf(file.exists())+"");
                 //write file
+                Log.d("checkForDuplicates()","called...");
+                checkForDuplicates();
                 writeXml(favoritesList,spFilePath);
+                Log.d("post-write:if-exists",String.valueOf(file.exists())+"");
             }else{
                 //create file
+                Log.d("checkForDuplicates()","called...");
+                checkForDuplicates();
                 writeXml(favoritesList,spFilePath);
                 Log.d("Info","writeXml() called...");
                 //write file
             }
         }else{
+            Log.d("sp.FILE_PATH","false");
             File path = getApplicationContext().getFilesDir();
             StringBuilder filePath = new StringBuilder(String.valueOf(path));
             filePath.append("/favoriteslist.xml");
@@ -651,16 +678,26 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             if(file.exists()){
                 //TODO:read ... parse ... to favoritesList ... destroy file then write new file
                 //parse file
-                //xmlToString(filepathSTR);
-                xmlToObject(filepathSTR);
-                Log.d("Info","xmlToString called...");
+                ArrayList<Restaurant> storageList = new ArrayList<Restaurant>(xmlToObject(filepathSTR));
+                for(int i=0;i<storageList.size();i++){
+                    favoritesList.add(storageList.get(i));
+                }
+                Log.d("Info","xmlToObject called...");
                 //destroy file
-                file.delete();
+                Log.d("DeleteThisFile()","called...");
+                Log.d("pre-del:if-exists",String.valueOf(file.exists())+"");
+                deleteThisFile();
+                Log.d("post-del:if-exists",String.valueOf(file.exists())+"");
                 //write file
+                Log.d("checkForDuplicates()","called...");
+                checkForDuplicates();
                 writeXml(favoritesList, filepathSTR);
                 Log.d("Info","writeXml() called...");
+                Log.d("post-write:if-exists",String.valueOf(file.exists())+"");
             }else{
                 //create file
+                Log.d("checkForDuplicates()","called...");
+                checkForDuplicates();
                 writeXml(favoritesList,filepathSTR);
                 Log.d("Info","writeXml() called...");
                 //write file
@@ -670,7 +707,28 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         finish();
     }
 
-    private void xmlToObject(String filename){
+    public void checkForDuplicates(){
+        Log.d("checkForDuplicates()","running...");
+        Log.d("cfd().fLizt.size()",favoritesList.size()+"");
+        for(int k=0;k<favoritesList.size();k++){
+            for(int j=0;j<favoritesList.size();j++) {
+                if (favoritesList.get(j).getPlace_id().equals(favoritesList.get(k).getPlace_id()) && k != j) {
+                    Log.d("Duplicate Removed", favoritesList.get(k).toString() + "");
+                    favoritesList.remove(k);
+                    k = 1;
+                }
+            }
+        }
+        Log.d("cfd().fLizt.size()",favoritesList.size()+"");
+    }
+
+    private void deleteThisFile(){
+        File dir = getFilesDir();
+        File dirFile = new File(dir, "favoriteslist.xml");
+        boolean deletedFile = dirFile.delete();
+    }
+
+    private ArrayList<Restaurant> xmlToObject(String filename){
         try {
             FileInputStream fis = new FileInputStream(filename);
             InputStreamReader isr = new InputStreamReader(fis);
@@ -680,34 +738,20 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             isr.close();
             fis.close();
 
-            InputStream is = new ByteArrayInputStream(data.getBytes("UTF-8"));
-
             Log.d("XmlToObject: ","String data="+data.toString());
+
+            InputStream is = new ByteArrayInputStream(data.getBytes("UTF-8"));
+            return XmlStorageUtil.XmlStoragePullParser.parseXmlStorage(is);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void xmlToString(String filename){
-        Log.d("Info","xmlToString() running...");
-        int fileLength = (int)filename.length();
-
-        byte[] bytes = new byte[fileLength];
-
-        try{
-            FileInputStream in = new FileInputStream(filename); Log.d("FileInputStream",filename+"");
-            in.read(bytes); Log.d("in.read",in.toString()+"");
-            in.close();
-
-            String contents = new String(bytes);
-            Log.d("File contents:",contents+"");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     private void writeXml(ArrayList<Restaurant> restaurants, String filename){
