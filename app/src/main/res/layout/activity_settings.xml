@@ -103,6 +103,16 @@
                 android:text="@string/switch_PushNotifications"
                 android:textColor="@android:color/background_light" />
 
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Enable In-app noise:"
+                android:textColor="@android:color/background_light" />
+
         </LinearLayout>
 
         <LinearLayout
