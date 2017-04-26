@@ -2,6 +2,7 @@ package uncc.ryan.clteatsdemo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -39,11 +40,12 @@ public class PopupWindowFavActions extends Activity implements View.OnClickListe
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width * .6),(int)(height * .2));
+        getWindow().setLayout((int)(width * .6),(int)(height * .23));
 
         //onclicklisteners
         findViewById(R.id.btnPopActionViewFavDetails).setOnClickListener(this);
         findViewById(R.id.btnPopActionDeleteFavorite).setOnClickListener(this);
+        findViewById(R.id.btnPopActionFavNav).setOnClickListener(this);
     }
 
     @Override
@@ -57,8 +59,24 @@ public class PopupWindowFavActions extends Activity implements View.OnClickListe
             Log.d("file updated","list size written: " + FavoritesActivity.favRestaurantsList.size());
 
             finish();
+        }else if(v == findViewById(R.id.btnPopActionFavNav)){
+
+            //TODO: change to Launch Nav button
+
+            //Toast.makeText(this, "View Details", Toast.LENGTH_SHORT).show();
+            StringBuilder sb = new StringBuilder("google.navigation:q=");
+            String placeName = FavoritesActivity.favRestaurantsList.get(index).getName();
+            String placeAddress = FavoritesActivity.favRestaurantsList.get(index).getAddress();
+            String navName = placeName.replaceAll(" ","+");
+            String navAddress = placeAddress.replaceAll(" ","+");
+            sb.append(navName);
+            sb.append(navAddress);
+            Uri gmmIntentUri = Uri.parse(sb.toString());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
         }else if(v == findViewById(R.id.btnPopActionViewFavDetails)){
-            Toast.makeText(this, "View Details", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This function not used!", Toast.LENGTH_SHORT).show();
         }
     }
 }

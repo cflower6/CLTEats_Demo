@@ -7,10 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.icu.util.ULocale;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,19 +14,14 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Xml;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -45,42 +36,27 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
-import java.util.logging.Handler;
 
 import static java.lang.Math.abs;
 import static uncc.ryan.clteatsdemo.FileUtil.writeXml;
 import static uncc.ryan.clteatsdemo.FileUtil.xmlToObject;
-import static uncc.ryan.clteatsdemo.R.id.dark;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
-import static uncc.ryan.clteatsdemo.R.id.start;
-import static uncc.ryan.clteatsdemo.R.styleable.MenuItem;
 
 
 public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener, PlacesAPIAsyncTask.AsyncResponse, PlacesDetailsAPIAsyncTask.AsyncResponse {
@@ -91,7 +67,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     static ArrayList<Restaurant> favoritesList = new ArrayList<>();
     static ArrayList<Restaurant> placesList;
     static ArrayList<Review> reviewsList = new ArrayList<>();
-    final String API_KEY = "AIzaSyDQR8gmJvYApRaEcepi9SZ4L9_TY1oOnMY";
+    ArrayList<Marker> mapMarkerList = new ArrayList<Marker>();
+    final String API_KEY = "AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ";
+
+    Marker marker;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -578,10 +557,13 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         resultsView.setAdapter(mRVAdapter);
 
         for (int k = 0; k < placesList.size(); k++){
-            mMap.addMarker(new MarkerOptions()
+            marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(placesList.get(k).getCoord_lat(), placesList.get(k).getCoord_long()))
                     .title(placesList.get(k).getName()));
-                    //.setSnippet(k + "");
+            marker.setTag(placesList.get(k).getPlace_id());
+
+            mapMarkerList.add(marker);
+
         }
 
         moveMapCamera();
@@ -614,7 +596,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     public void onBackPressed(){
-        Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
 
         //TODO:if file exists read from ... else write favoritesList to file
 
@@ -750,13 +732,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                         Log.d("onItemClick","position " + position);
                         //Toast.makeText(SearchActivity.this, "" + placesList.get(position).getName(), Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(SearchActivity.this, PopupWindow.class);
+                        /*Intent intent = new Intent(SearchActivity.this, PopupWindow.class);
                         intent.putExtra("INDEX",position);
 
                         if(placesList.get(position).getReview(0) != null) {
                             startActivity(intent);
                         }else{
                             Toast.makeText(SearchActivity.this, "Still Loading...", Toast.LENGTH_SHORT).show();
+                        }*/
+
+                        for(int i=0;i<placesList.size();i++) {
+                            if (mapMarkerList.get(i).getTag().equals(placesList.get(position).getPlace_id())) {
+                                Marker marker = mapMarkerList.get(i);
+                                marker.showInfoWindow();
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15.0f));
+                            }
                         }
                     }
 

@@ -17,13 +17,20 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     Spinner sortByType;
-    ArrayList<String> spinSortByType = new ArrayList<>();
 
     Switch swRandomizeByConstraints;
     Switch swConstraintsFilter;
+    Switch swPushNotifications;
+    Switch swInAppNoise;
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
+
+    String lastSortType;
+    String lastConstrainsFilter;
+    String lastRandomizeByConstraints;
+    String lastPushNotification;
+    String lastAppNoise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         //start shared preferences and start editor
         sp = this.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         editor = sp.edit();
+
+        //sync settings last state
+        lastSortType = sp.getString("SORT_TYPE","default");
+        lastConstrainsFilter = sp.getString("FILTER_CONST", "default");
+        lastRandomizeByConstraints = sp.getString("RANDOM_TYPE", "default");
+        lastPushNotification = sp.getString("PUSH_NOTIF", "default");
+        lastAppNoise = sp.getString("APP_NOISE","default");
 
         //set OnClickListeners
         findViewById(R.id.btnSaveSettings).setOnClickListener(this);
@@ -45,7 +59,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         //initialize switches
         swRandomizeByConstraints = (Switch) findViewById(R.id.swConstraintRandomize);
+            if(lastRandomizeByConstraints.equals("true")){
+                swConstraintsFilter.setChecked(true);
+            }
         swConstraintsFilter = (Switch) findViewById(R.id.swConstraintFilter);
+            if(lastConstrainsFilter.equals("true")) {
+                swConstraintsFilter.setChecked(true);
+            }
+        swPushNotifications = (Switch) findViewById(R.id.swPushNotifications);
+            if(lastPushNotification.equals("true")){
+                swPushNotifications.setChecked(true);
+            }
+        swInAppNoise = (Switch) findViewById(R.id.swInAppNoise);
+            if(lastAppNoise.equals("true")){
+                swInAppNoise.setChecked(true);
+            }
     }
 
     @Override
@@ -86,6 +114,28 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }else {
                 Log.d("ConstraintFilter","default");
                 editor.putString("FILTER_CONST","default");
+            }
+
+            if(swPushNotifications.isChecked()){
+                Log.d("PUSH_NOTIF","true");
+                editor.putString("PUSH_NOTIF","true");
+            }else if(!swPushNotifications.isChecked()){
+                Log.d("PUSH_NOTIF","false");
+                editor.putString("PUSH_NOTIF","false");
+            }else{
+                Log.d("PUSH_NOTIF","default");
+                editor.putString("PUSH_NOTIF","default");
+            }
+
+            if(swInAppNoise.isChecked()){
+                Log.d("APP_NOISE","true");
+                editor.putString("APP_NOISE","true");
+            }else if(!swInAppNoise.isChecked()){
+                Log.d("APP_NOISE","false");
+                editor.putString("APP_NOISE","false");
+            }else{
+                Log.d("AP_NOISE","default");
+                editor.putString("APP_NOISE","default");
             }
 
             editor.commit();

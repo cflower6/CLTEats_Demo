@@ -55,7 +55,14 @@ public class PopupWindowActions extends Activity implements View.OnClickListener
             finish();
         }else if(v == findViewById(R.id.btnPopActionViewDetails)){
             Toast.makeText(this, "View Details", Toast.LENGTH_SHORT).show();
-            //TODO: not sure what this will do yet
+
+            Intent intent = new Intent(getApplicationContext(), PopupWindow.class);
+            intent.putExtra("INDEX",index);
+            if(SearchActivity.placesList.get(index).getReview(0) != null) {
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, "Still Loading...", Toast.LENGTH_SHORT).show();
+            }
             finish();
         }
 

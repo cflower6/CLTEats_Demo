@@ -52,12 +52,14 @@ public class PopupWindow extends Activity {
         tvPhoneNumber.setText(placesList.get(index).getPhone_number());
 
         reviewsList = placesList.get(index).getReviews();
-        Log.d("reviewsList.size():",reviewsList.size()+"");
+        Log.d("reviewsList.size()",reviewsList.size()+"");
+        Log.d("SA.pList.reviews.size()",SearchActivity.placesList.get(index).reviews.size()+"");
+
         //Log.d("reviewsList",reviewsList.toString()+"");
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 
-        ReviewAdapter adapter = new ReviewAdapter(this, reviewsList);
+        ReviewAdapter adapter = new ReviewAdapter(this, SearchActivity.placesList.get(index).reviews);
         RecyclerView rvReviewsList = (RecyclerView)findViewById(R.id.rvReviewsList);
         rvReviewsList.setHasFixedSize(true);
         rvReviewsList.setLayoutManager(layoutManager);

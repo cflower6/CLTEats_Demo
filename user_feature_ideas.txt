@@ -15,13 +15,9 @@ RE-Results list item onClickClistener contents:
 RE-Results list item onLongClickListener contents:
 	-fragment options list:
 		-launch navigation
-		-add to favorites
-		-view location reviews
 
 
 RE-Setting: show is open only
-RE-Setting:i'm feeling lucky button
-        -toggle full random vs categorical
 
 BEHAVIOR NOTE: sometimes no results are received from the server
 	-research adding a request retry in the code
