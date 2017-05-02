@@ -40,10 +40,9 @@ public class PopupWindowFavActions extends Activity implements View.OnClickListe
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width * .6),(int)(height * .23));
+        getWindow().setLayout((int)(width * .6),(int)(height * .187));
 
         //onclicklisteners
-        findViewById(R.id.btnPopActionViewFavDetails).setOnClickListener(this);
         findViewById(R.id.btnPopActionDeleteFavorite).setOnClickListener(this);
         findViewById(R.id.btnPopActionFavNav).setOnClickListener(this);
     }
@@ -75,8 +74,6 @@ public class PopupWindowFavActions extends Activity implements View.OnClickListe
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
-        }else if(v == findViewById(R.id.btnPopActionViewFavDetails)){
-            Toast.makeText(this, "This function not used!", Toast.LENGTH_SHORT).show();
         }
     }
 }

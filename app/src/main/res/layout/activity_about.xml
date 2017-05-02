@@ -19,9 +19,9 @@
         android:layout_width="368dp"
         android:layout_height="495dp"
         android:orientation="vertical"
+        android:weightSum="1"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp"
-        android:weightSum="1">
+        tools:layout_editor_absoluteY="8dp">
 
         <TextView
             android:id="@+id/textView2"
@@ -39,10 +39,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="396dp"
+            android:layout_weight="0.77"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp"
-            android:layout_weight="0.77">
+            tools:layout_editor_absoluteY="8dp">
 
             <TextView
                 android:id="@+id/textView6"
@@ -137,6 +137,56 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/about_Team"
+                android:textColor="@android:color/background_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:text="Chris Flowers"
+                android:textColor="@android:color/background_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:text="Conor Smith"
+                android:textColor="@android:color/background_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:text="Manthan Patel"
+                android:textColor="@android:color/background_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:text="Ryan Riddell"
+                android:textColor="@android:color/background_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:text="Noah Miller"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp" />
 

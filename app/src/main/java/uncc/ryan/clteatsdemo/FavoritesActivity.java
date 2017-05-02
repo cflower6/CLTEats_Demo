@@ -123,7 +123,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
                         if(favRestaurantsList.get(position).getReview(0) != null) {
                             startActivity(intent);
                         }else{
-                            Toast.makeText(FavoritesActivity.this, "Not yet implemented!", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(FavoritesActivity.this, "Not yet implemented!", Toast.LENGTH_SHORT).show();
                         }
                     }
 

@@ -68,7 +68,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     static ArrayList<Restaurant> placesList;
     static ArrayList<Review> reviewsList = new ArrayList<>();
     ArrayList<Marker> mapMarkerList = new ArrayList<Marker>();
-    final String API_KEY = "AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ";
+    final String API_KEY = "AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ"; //Ryan's API Key
+    //final String API_Key = "AIzaSyDQR8gmJvYApRaEcepi9SZ4L9_TY1oOnMY"; //Chris' API Key
 
     Marker marker;
 
@@ -650,7 +651,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
             File file = new File(filepathSTR);
             if(file.exists()){
-                //TODO:read ... parse ... to favoritesList ... destroy file then write new file
+                //read ... parse ... to favoritesList ... destroy file then write new file
                 //parse file
                 ArrayList<Restaurant> storageList = new ArrayList<Restaurant>(xmlToObject(filepathSTR));
                 for(int i=0;i<storageList.size();i++){
