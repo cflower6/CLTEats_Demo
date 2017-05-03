@@ -54,6 +54,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
 import static uncc.ryan.clteatsdemo.FileUtil.writeXml;
 import static uncc.ryan.clteatsdemo.FileUtil.xmlToObject;
 import static uncc.ryan.clteatsdemo.R.id.googleMap;
@@ -70,6 +71,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     ArrayList<Marker> mapMarkerList = new ArrayList<Marker>();
     final String API_KEY = "AIzaSyBJM6hOHxff8dVxDn40_I6YBmlFVG0bhMQ"; //Ryan's API Key
     //final String API_Key = "AIzaSyDQR8gmJvYApRaEcepi9SZ4L9_TY1oOnMY"; //Chris' API Key
+
+    RVAdapter mRVAdapter;
 
     Marker marker;
 
@@ -97,6 +100,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     boolean onSearchRandomized = false;
     boolean onSearchRandomizedBranch = false;
+    boolean category = false;
 
     int randomizedListSize;
     static int reviewsMergeSync;
@@ -106,6 +110,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     String sortType;
     String randomType;
     String filterConst;
+
+    static String maxPrice = "$";
 
     RecyclerView resultsView;
 
@@ -317,8 +323,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         }
 
         String foodCategory = spinCategory.getSelectedItem().toString();
+        if(!foodCategory.equals("Any")){
+            category = true;
+        }
 
-        String maxPrice = spinPrice.getSelectedItem().toString();
+        maxPrice = spinPrice.getSelectedItem().toString();
 
         getGPS();
 
@@ -328,6 +337,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         sb.append("location=" + latitude + "," + longitude);
         sb.append("&radius=" + radius);
         sb.append("&types=restaurant");
+        if(category){
+            sb.append("&keyword=" +foodCategory);
+        }
         sb.append("&sensor=true");
         sb.append("&key=" + API_KEY);
 
@@ -367,6 +379,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         }
 
         progressDialogReviews.hide();
+
+        //filterPrice();
 
         return null;
     }
@@ -495,12 +509,40 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         return null;
     }
 
+    private void filterPrice(){
+        for(int i=0;i<placesList.size();i++){
+            Log.d("Iterating","placesList.size()"+placesList.size());
+            Log.d("Iterating","Lisit.i:"+placesList.get(i).getPrice());
+            if(maxPrice.equals("$")){
+                if(placesList.get(i).getPrice().equals("$$") || placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")){
+                    placesList.remove(placesList.get(i));
+                    i=0;
+                    Log.d("Iterating","price filter");
+                }
+            }else if(maxPrice.equals("$$")){
+                if(placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")){
+                    placesList.remove(placesList.get(i));
+                    i=0;
+                    Log.d("Iterating","price filter");
+                }
+            }else if(maxPrice.equals("$$$")){
+                if(placesList.get(i).getPrice().equals("$$$$")){
+                    placesList.remove(placesList.get(i));
+                    i=0;
+                    Log.d("Iterating","price filter");
+                }
+            }
+        }
+        mRVAdapter.notifyDataSetChanged();
+    }
+    static int finalI = 0;
     public void getPlaceDetails(){
         Log.d("2nd randomizedListSize",randomizedListSize+"");
         for(int i = 0;i<randomizedListSize;i++){
             //Log.d("Place name",placesList.get(i).getName()+"");
             //Log.d("Place id",placesList.get(i).getPlace_id()+"");
-            final int finalI = i;
+            //final int finalI = i;
+            finalI = i;
             Places.GeoDataApi.getPlaceById(mGoogleApiClient,
                         placesList.get(i).getPlace_id())
                         .setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -554,7 +596,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         linearLayout.addView(resultsView);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         resultsView.setLayoutManager(llm);
-        RVAdapter mRVAdapter = new RVAdapter(this, placesList);
+        mRVAdapter = new RVAdapter(this, placesList);
         resultsView.setAdapter(mRVAdapter);
 
         for (int k = 0; k < placesList.size(); k++){

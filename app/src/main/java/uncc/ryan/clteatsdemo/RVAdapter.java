@@ -31,6 +31,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
             itemView.setOnClickListener(this);
         }
         public void bindRestaurant(Restaurant restaurant){
+            buildObject(restaurant);
+
+        }
+
+        private void buildObject(Restaurant restaurant){
             restName.setText(restaurant.getName());
             restAddress.setText(restaurant.getAddress());
             Double mDist = restaurant.getDistance_miles();
