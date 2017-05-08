@@ -380,7 +380,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
         progressDialogReviews.hide();
 
-        //filterPrice();
+        filterPrice();
 
         return null;
     }
@@ -441,6 +441,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     public PlacesAPIAsyncTask.AsyncResponse processFinish(ArrayList<Restaurant> output) {
         placesList = output;
         Log.d("debug","placesList: " + placesList.toString());
+
+        mRVAdapter = new RVAdapter(this, placesList);
 
         Log.d("1st randomizedListSize",randomizedListSize+"");
         if(onSearchRandomizedBranch){
@@ -513,36 +515,53 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         for(int i=0;i<placesList.size();i++){
             Log.d("Iterating","placesList.size()"+placesList.size());
             Log.d("Iterating","Lisit.i:"+placesList.get(i).getPrice());
-            if(maxPrice.equals("$")){
-                if(placesList.get(i).getPrice().equals("$$") || placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")){
-                    placesList.remove(placesList.get(i));
-                    i=0;
-                    Log.d("Iterating","price filter");
+            if(placesList.get(i).getPrice() != null) {
+                if (maxPrice.equals("$")) {
+                    if (placesList.get(i).getPrice().equals("$$") || placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")) {
+                        placesList.remove(placesList.get(i));
+                        i = 0;
+                        Log.d("Iterating", "price filter");
+                        mRVAdapter.notifyDataSetChanged();
+                    }
+                } else if (maxPrice.equals("$$")) {
+                    if (placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")) {
+                        placesList.remove(placesList.get(i));
+                        i = 0;
+                        Log.d("Iterating", "price filter");
+                        mRVAdapter.notifyDataSetChanged();
+                    }
+                } else if (maxPrice.equals("$$$")) {
+                    if (placesList.get(i).getPrice().equals("$$$$")) {
+                        placesList.remove(placesList.get(i));
+                        i = 0;
+                        Log.d("Iterating", "price filter");
+                        mRVAdapter.notifyDataSetChanged();
+                    }
                 }
-            }else if(maxPrice.equals("$$")){
-                if(placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")){
-                    placesList.remove(placesList.get(i));
-                    i=0;
-                    Log.d("Iterating","price filter");
-                }
-            }else if(maxPrice.equals("$$$")){
-                if(placesList.get(i).getPrice().equals("$$$$")){
-                    placesList.remove(placesList.get(i));
-                    i=0;
-                    Log.d("Iterating","price filter");
-                }
+            }else{
+                Log.d("Iterating","null detected!");
+                break;
+            }
+
+            if(filterConst.equals("true") && placesList.get(i).getPrice().equals("?") && placesList.size() > 1){
+                placesList.remove(placesList.get(i));
+                i=0;
+                Log.d("Iterating","? entry removed");
+                mRVAdapter.notifyDataSetChanged();
+                break;
             }
         }
-        mRVAdapter.notifyDataSetChanged();
     }
+
     static int finalI = 0;
     public void getPlaceDetails(){
         Log.d("2nd randomizedListSize",randomizedListSize+"");
-        for(int i = 0;i<randomizedListSize;i++){
+        for(int i = 0, finalI = 0;i<randomizedListSize;i++ , finalI++){
             //Log.d("Place name",placesList.get(i).getName()+"");
             //Log.d("Place id",placesList.get(i).getPlace_id()+"");
             //final int finalI = i;
-            finalI = i;
+            //finalI = i;
+            final int finalI1 = finalI;
             Places.GeoDataApi.getPlaceById(mGoogleApiClient,
                         placesList.get(i).getPlace_id())
                         .setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -555,23 +574,28 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
                                     //Log.i("Info","Place found phone#:" + myPlace.getPhoneNumber());
 
-                                    //Log.d("finalI",finalI+"");
+                                    Log.d("finalI", finalI1 +"");
 
                                     int tempPriceLevel = myPlace.getPriceLevel();
                                     if(tempPriceLevel == 1){
                                         //tempPrice = "$";
-                                        placesList.get(finalI).setPrice("$");
+                                        placesList.get(finalI1).setPrice("$");
+                                        Log.d("Info", "Place " + placesList.get(finalI1).getName() + " price set: " + placesList.get(finalI1).getPrice());
                                     }else if(tempPriceLevel == 2){
                                         //tempPrice = "$$";
-                                        placesList.get(finalI).setPrice("$$");
+                                        placesList.get(finalI1).setPrice("$$");
+                                        Log.d("Info", "Place " + placesList.get(finalI1).getName() + " price set: " + placesList.get(finalI1).getPrice());
                                     }else if(tempPriceLevel == 3){
                                         //tempPrice = "$$$";
-                                        placesList.get(finalI).setPrice("$$$");
+                                        placesList.get(finalI1).setPrice("$$$");
+                                        Log.d("Info", "Place " + placesList.get(finalI1).getName() + " price set: " + placesList.get(finalI1).getPrice());
                                     }else if(tempPriceLevel == -1){
-                                        placesList.get(finalI).setPrice("?");
+                                        placesList.get(finalI1).setPrice("?");
+                                        Log.d("Info", "Place " + placesList.get(finalI1).getName() + " price set: " + placesList.get(finalI1).getPrice());
                                     }
 
-                                    placesList.get(finalI).setPhone_number((String) myPlace.getPhoneNumber());
+                                    placesList.get(finalI1).setPhone_number((String) myPlace.getPhoneNumber());
+                                    Log.d("Info", "Place phone set!");
                                 }else{
                                     Log.e("Error","Place not found");
                                 }
@@ -581,6 +605,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                         });
             //placesList.get(i).setPrice(tempPrice);
             Log.d("Place price",placesList.get(i).getPrice()+"");
+
+            mRVAdapter.notifyDataSetChanged();
+            Log.d("layout.update",placesList.toString()+"");
         }
     }
 
@@ -596,8 +623,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         linearLayout.addView(resultsView);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         resultsView.setLayoutManager(llm);
-        mRVAdapter = new RVAdapter(this, placesList);
+        mRVAdapter.notifyDataSetChanged();
         resultsView.setAdapter(mRVAdapter);
+
+        Log.d("clearLayout()", "running...");
+        Log.d("layout.list",placesList.toString()+"");
 
         for (int k = 0; k < placesList.size(); k++){
             marker = mMap.addMarker(new MarkerOptions()

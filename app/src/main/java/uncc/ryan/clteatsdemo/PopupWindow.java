@@ -54,6 +54,7 @@ public class PopupWindow extends Activity {
         reviewsList = placesList.get(index).getReviews();
         Log.d("reviewsList.size()",reviewsList.size()+"");
         Log.d("SA.pList.reviews.size()",SearchActivity.placesList.get(index).reviews.size()+"");
+        Log.d("SA.pList.price()",SearchActivity.placesList.get(index).getPrice()+"");
 
         //Log.d("reviewsList",reviewsList.toString()+"");
 

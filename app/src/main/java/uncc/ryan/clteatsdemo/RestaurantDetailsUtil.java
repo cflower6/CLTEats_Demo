@@ -34,17 +34,17 @@ public class RestaurantDetailsUtil {
                         if(name.equals("text")){
                             review = new Review(); hasItem = true;
                             review.setUserComment(parser.nextText().trim());
-                            Log.d("debug","XMLparse: UserComment: " + review.getUserComment());
+                            //Log.d("debug","XMLparse: UserComment: " + review.getUserComment());
                         }else if(name.equals("author_name")){
                             if(hasItem){
                                 review.setUserName(parser.nextText().trim());
                             }
-                            Log.d("debug","XMLparse: UserName: " + review.getUserName());
+                            //Log.d("debug","XMLparse: UserName: " + review.getUserName());
                         }else if(name.equals("aspect")){
                             //if(name.equals("rating")){
                                 //eview.setUserRating(Integer.parseInt(parser.nextText().trim()));
                             //}
-                            Log.d("debug","XMLparse: UserRating: " + review.getUserRating());
+                            //Log.d("debug","XMLparse: UserRating: " + review.getUserRating());
                         }else if(name.equals("place_id")){
                             if(hasItem){
                                 review.setPlace_id(parser.nextText().trim());

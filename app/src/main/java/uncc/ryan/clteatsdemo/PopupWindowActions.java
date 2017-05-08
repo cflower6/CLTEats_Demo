@@ -54,7 +54,7 @@ public class PopupWindowActions extends Activity implements View.OnClickListener
             }
             finish();
         }else if(v == findViewById(R.id.btnPopActionViewDetails)){
-            Toast.makeText(this, "View Details", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "View Details", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(getApplicationContext(), PopupWindow.class);
             intent.putExtra("INDEX",index);
