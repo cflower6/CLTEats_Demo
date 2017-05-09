@@ -101,6 +101,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     boolean onSearchRandomized = false;
     boolean onSearchRandomizedBranch = false;
     boolean category = false;
+    boolean apiReleased = false;
 
     int randomizedListSize;
     static int reviewsMergeSync;
@@ -512,10 +513,23 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     private void filterPrice(){
-        for(int i=0;i<placesList.size();i++){
-            Log.d("Iterating","placesList.size()"+placesList.size());
-            Log.d("Iterating","Lisit.i:"+placesList.get(i).getPrice());
-            if(placesList.get(i).getPrice() != null) {
+        if(!apiReleased) {
+            while(!apiReleased){
+                Log.d("Price Filter","Wait on relaease...");
+            }
+            filterBlock();
+        }else {
+            filterBlock();
+        }
+    }
+
+    private void filterBlock(){
+        Log.d("Price filter","Begin filter...");
+        for (int i = 0; i < placesList.size(); i++) {
+            Log.d("Iterating", "placesList.size()" + placesList.size());
+            Log.d("Iterat" +
+                    "ing", "Lisit.i:" + placesList.get(i).getPrice());
+            if (placesList.get(i).getPrice() != null) {
                 if (maxPrice.equals("$")) {
                     if (placesList.get(i).getPrice().equals("$$") || placesList.get(i).getPrice().equals("$$$") || placesList.get(i).getPrice().equals("$$$$")) {
                         placesList.remove(placesList.get(i));
@@ -538,15 +552,14 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                         mRVAdapter.notifyDataSetChanged();
                     }
                 }
-            }else{
-                Log.d("Iterating","null detected!");
+            } else {
+                Log.d("Iterating", "null detected!");
                 break;
             }
-
-            if(filterConst.equals("true") && placesList.get(i).getPrice().equals("?") && placesList.size() > 1){
+            if (filterConst.equals("true") && placesList.get(i).getPrice().equals("?") && placesList.size() > 1 && apiReleased) {
                 placesList.remove(placesList.get(i));
-                i=0;
-                Log.d("Iterating","? entry removed");
+                i = 0;
+                Log.d("Iterating", "? entry removed");
                 mRVAdapter.notifyDataSetChanged();
                 break;
             }
@@ -600,6 +613,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
                                     Log.e("Error","Place not found");
                                 }
                                 //Log.d("Set Place price",placesList.get(finalI).getPrice()+"");
+                                apiReleased = true;
                                 places.release();
                             }
                         });

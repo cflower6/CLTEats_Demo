@@ -36,8 +36,7 @@
                     android:id="@+id/btnRetryGPS"
                     android:layout_width="56dp"
                     android:layout_height="match_parent"
-                    android:background="#034125"
-                    android:text="x" />
+                    android:background="#034125" />
 
                 <TextView
                     android:id="@+id/tvDistance"
